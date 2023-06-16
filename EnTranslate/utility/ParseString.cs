@@ -9,6 +9,7 @@ namespace EnTranslate.utility
 {
     public static class ParseString
     {
+        const char SplitValue = '_';
         /// <summary>
         /// 拆分字符串
         /// 例: foor-bar 拆分为 [foo, bar]
@@ -22,7 +23,9 @@ namespace EnTranslate.utility
             {
                 return Words;
             }
-            character = Regex.Matches(character, @"[A-Z\s]{2,}").Select(I =>
+            var RegexValue = Regex.Matches(character, @"[A-Z\s]{2,}").Cast<Match>();
+            if (RegexValue.Count() > 0) 
+            character = RegexValue.Select(I =>
             {
                 string tempValue = I.Value;
                 // 将大写的单词转换为小写的
@@ -38,8 +41,8 @@ namespace EnTranslate.utility
                 Words.Add(character.ToLower());
                 return Words;
             }
-            var getWords = Decamelize(character).Split("_").ToList<string>();
-            return Words.Concat(getWords);
+            var getWords = Decamelize(character).Split(SplitValue).ToList<string>();
+            return Words.Concat(getWords).Distinct();
         }
         /// <summary>
         /// 将一段小驼峰命名法的单词分隔，并使用下划线连接

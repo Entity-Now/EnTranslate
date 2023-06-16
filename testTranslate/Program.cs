@@ -6,9 +6,13 @@ namespace testTranslate
     {
         static void Main(string[] args)
         {
-            var word = Console.ReadLine()!;
-            Console.WriteLine(QueryDir.getDir(word));
-            Console.WriteLine("Hello, World!");
+            var word = Console.ReadLine();
+            var words = ParseString.getWordArray(word);
+            foreach (var item in words)
+            {
+                Console.WriteLine(QueryDir.getDir(item));
+                Console.WriteLine(item);
+            }
         }
     }
 }

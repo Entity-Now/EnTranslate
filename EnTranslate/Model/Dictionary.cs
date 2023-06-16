@@ -8,8 +8,8 @@ namespace EnTranslate.Model
 {
     public class Dictionarys
     {
-        public string? p { get; set; }
-        public string? w { get; set; }
+        public string p { get; set; } = null;
+        public string w { get; set; } = null;
         public string t { get; set; } = string.Empty;
     }
 }
