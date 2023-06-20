@@ -19,7 +19,7 @@ namespace EnTranslate.utility
         public static IEnumerable<string> getWordArray(string character)
         {
             List<string> Words = new List<string>(); 
-            if (string.IsNullOrEmpty(character))
+            if (string.IsNullOrEmpty(character) && character.Length < 2)
             {
                 return Words;
             }
@@ -93,7 +93,7 @@ namespace EnTranslate.utility
             // 将首字母转换为小写
             return char.ToLower(input[0]) + input.Substring(1);
         }
-
+        // 大驼峰命名法
         public static string Pascalize(string input)
         {
             string camelized = Camelize(input);

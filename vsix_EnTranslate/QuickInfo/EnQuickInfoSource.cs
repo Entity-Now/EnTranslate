@@ -8,6 +8,9 @@ using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
 using EnTranslate.utility;
+using System.Linq;
+using System.Text.RegularExpressions;
+using vsix_EnTranslate.utility;
 
 namespace vsix_EnTranslate.QuickInfo
 {
@@ -31,52 +34,40 @@ namespace vsix_EnTranslate.QuickInfo
                 applicableToSpan = null;
                 return;
             }
-
             ITextSnapshot currentSnapshot = subjectTriggerPoint.Value.Snapshot;
             SnapshotSpan querySpan = new SnapshotSpan(subjectTriggerPoint.Value, 0);
+            applicableToSpan = currentSnapshot.CreateTrackingSpan(querySpan, SpanTrackingMode.EdgeInclusive);
 
             // 在范围内查找我们的 QuickInfo 单词的出现
             ITextStructureNavigator navigator = m_provider.NavigatorService.GetTextStructureNavigator(m_subjectBuffer);
             TextExtent extent = navigator.GetExtentOfWord(subjectTriggerPoint.Value);
             string searchText = extent.Span.GetText();
 
-            var words = ParseString.getWordArray(searchText);
-            foreach (var item in words)
+            // 判断字符串是否包含中文
+            bool containsChinese = Regex.IsMatch(searchText, @"[\u4e00-\u9fff]");
+            if (containsChinese)
             {
-                session.QuickInfoContent.Add(item);
-                //qiContent.Add(item);
+                applicableToSpan = null;
+                return;
             }
-            // 获取光标下的名称
-            //string cursorName = GetCursorName(searchText);
-            //if (string.IsNullOrEmpty(cursorName))
-            //{
-            //    var words = ParseString.getWordArray(cursorName);
-            //    foreach (var item in words)
-            //    {
-            //        qiContent.Add(item);
-            //    }
-            //    applicableToSpan = null;
-            //    return;
-            //}
+            // 分割单词
+            var words = ParseString.getWordArray(searchText);
+            if (words.Count() > 0)
+            {
+                foreach (var item in words)
+                {
+                    var TranslateVal = QueryDir.getDir(item);
+                    if (TranslateVal != null)
+                    {
+                        var Content = applicableToSpan.TranslateInfo(TranslateVal);
 
-            // 对光标名称进行进一步处理
-            // ...
+                        qiContent.Add(Content);
+                    }
+                }
+                return;
+            }
 
             applicableToSpan = null;
-        }
-
-        private string GetCursorName(string searchText)
-        {
-            // 从 searchText 中提取名称的逻辑
-            // 根据你的具体需求和语言规范进行修改
-            // 这里假设名称是不包含特殊字符的单词，并使用空格、制表符、换行符以及一些常见的特殊字符来分隔单词
-            string[] words = searchText.Split(new[] { ' ', '\t', '\n', '\r', '(', ')', '[', ']', '{', '}', '<', '>', '+', '-', '*', '/', '=', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
-            if (words.Length > 0)
-            {
-                return words[words.Length - 1];
-            }
-
-            return string.Empty;
         }
 
 

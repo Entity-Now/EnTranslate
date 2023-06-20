@@ -15,11 +15,11 @@ namespace EnTranslate.utility
         /// </summary>
         /// <param name="word"></param>
         /// <returns></returns>
-        public static string getDir(string word)
+        public static Dictionarys getDir(string word)
         {
-            if (string.IsNullOrEmpty(word))
+            if (string.IsNullOrEmpty(word) && word.Length < 2)
             {
-                return "输入的字符串为空~";
+                return null;
             }
             string prefix = word.Substring(0, 2);
             string dir = utility.utlis.ReadEmbeddedResource($"EnTranslate.Translates.{prefix.ToLower()}.json");
@@ -31,46 +31,24 @@ namespace EnTranslate.utility
             {
                 if (value.Type == JTokenType.String)
                 {
-                    return value.ToString();
+                    return new Dictionarys 
+                    {
+                        key = word,
+                        t = value.ToString()
+                    };
                 }
                 else if (value.Type == JTokenType.Object)
                 {
                     Dictionarys dictionaryValue = value.ToObject<Dictionarys>();
                     if (dictionaryValue != null)
                     {
-                        return dictionaryValue.t;
+                        dictionaryValue.key = word;
+                        return dictionaryValue;
                     }
                 }
             }
 
-            return string.Empty;
+            return null;
         }
-        // .net standard 2.0 不支持System.Text.Json
-        //public static string getDir(string word)
-        //{
-        //    string prefix = word.Substring(0,2);
-        //    string dir = utility.utlis.ReadEmbeddedResource($"EnTranslate.Translates.{prefix}.json");
-        //    // 转换为json
-        //    Dictionary<string, object>? jsonObject = JsonSerializer.Deserialize<Dictionary<string, object>>(dir);
-        //    if (jsonObject != null && jsonObject.TryGetValue(word, out var value))
-        //    {
-        //        if (value is JsonElement jsonElement)
-        //        {
-        //            if (jsonElement.ValueKind == JsonValueKind.String)
-        //            {
-        //                return value.ToString();
-        //            }
-        //            else if (jsonElement.ValueKind == JsonValueKind.Object)
-        //            {
-        //                Dictionarys dictionaryValue = JsonSerializer.Deserialize<Dictionarys>(jsonElement.GetRawText());
-        //                if (dictionaryValue != null)
-        //                {
-        //                    return dictionaryValue.t;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return string.Empty;
-        //}
     }
 }

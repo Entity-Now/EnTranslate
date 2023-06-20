@@ -10,8 +10,11 @@ namespace testTranslate
             var words = ParseString.getWordArray(word);
             foreach (var item in words)
             {
-                Console.WriteLine(QueryDir.getDir(item));
-                Console.WriteLine(item);
+                var TranslateVal = QueryDir.getDir(item);
+                if (TranslateVal!= null)
+                {
+                    Console.WriteLine(TranslateVal.t);
+                }
             }
         }
     }
