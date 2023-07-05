@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EnTranslate.utility
@@ -35,6 +36,25 @@ namespace EnTranslate.utility
                     return reader.ReadToEnd();
                 }
             }
+        }
+
+        /// <summary>
+        /// 防抖函数，传入延迟时间，返回一个函数，该函数接受一个回调函数，当调用该函数时，会在延迟时间后执行回调函数
+        /// </summary>
+        /// <param name="delay"></param>
+        /// <returns></returns>
+        public static Action<Action> Debounce(int delay)
+        {
+            Timer timing = null;
+            return (callback) =>
+            {
+                timing?.Dispose();
+                timing = new Timer((_) =>
+                {
+                    // do something
+                    callback();
+                }, null, delay, Timeout.Infinite);
+            };
         }
     }
 }

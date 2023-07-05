@@ -1,19 +1,16 @@
-﻿using Microsoft.VisualStudio.Language.Intellisense;
+﻿using EnTranslate.Model;
+using Microsoft.VisualStudio.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows;
-using System.Runtime.CompilerServices;
-using Microsoft.VisualStudio.Text;
-using EnTranslate.Model;
-using System.Windows.Controls;
-using System.Text.RegularExpressions;
 
-namespace vsix_EnTranslate.utility
+namespace EnTranslate_Chinese.utility
 {
     public static class MakeInfoItem
     {
@@ -29,12 +26,12 @@ namespace vsix_EnTranslate.utility
             {
                 Text = "翻译：",
                 FontWeight = FontWeights.Bold,
-                Foreground = utility.utlis.StringGetColor("#33CEA2")
+                Foreground = utlis.StringGetColor("#33CEA2")
             };
             var Key = new Run
             {
                 Text = val.key,
-                Foreground = utility.utlis.StringGetColor("#29AB87")
+                Foreground = utlis.StringGetColor("#29AB87")
             };
             title.Inlines.Add(information);
             title.Inlines.Add(Key);
@@ -44,12 +41,12 @@ namespace vsix_EnTranslate.utility
                 var annotate = new Run()
                 {
                     Text = $"   音标注解：",
-                    Foreground = utility.utlis.StringGetColor("#33CEA2")
+                    Foreground = utlis.StringGetColor("#33CEA2")
                 };
                 var gloss = new Run()
                 {
                     Text = val.p,
-                    Foreground = utility.utlis.StringGetColor("#29AB87")
+                    Foreground = utlis.StringGetColor("#29AB87")
                 };
                 title.Inlines.Add(annotate);
                 title.Inlines.Add(gloss);
@@ -63,7 +60,7 @@ namespace vsix_EnTranslate.utility
                 var contentTextBlock = new TextBlock();
                 contentTextBlock.Text = item;
                 contentTextBlock.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#e8e8e8"));
-                contentTextBlock.Margin = new Thickness(10, 0 , 0, 0);
+                contentTextBlock.Margin = new Thickness(10, 0, 0, 0);
                 stackPanel.Children.Add(contentTextBlock);
             }
 

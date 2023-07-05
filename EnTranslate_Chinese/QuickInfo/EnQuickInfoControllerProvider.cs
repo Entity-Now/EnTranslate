@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace vsix_EnTranslate.QuickInfo
+namespace EnTranslate_Chinese.QuickInfo
 {
     [Export(typeof(IIntellisenseControllerProvider))]
     [Name("ToolTip QuickInfo Controller")]

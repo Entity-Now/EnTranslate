@@ -3,10 +3,6 @@
   <PropertyGroup>
     <MinimumVisualStudioVersion>17.0</MinimumVisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>Logo.ico</ApplicationIcon>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -14,11 +10,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{08C7F000-6DBC-4DEB-B17B-7DE368F8591D}</ProjectGuid>
+    <ProjectGuid>{ECF6E969-32B6-48F8-A545-5DEBC36DBE02}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>vsix_EnTranslate</RootNamespace>
-    <AssemblyName>vsix_EnTranslate</AssemblyName>
+    <RootNamespace>EnTranslate_Chinese</RootNamespace>
+    <AssemblyName>EnTranslate_Chinese</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <UseCodebase>true</UseCodebase>
@@ -49,16 +45,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Model\CSharpSignature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="EnTranslate_ChinesePackage.cs" />
     <Compile Include="QuickInfo\EnQuickInfoController.cs" />
     <Compile Include="QuickInfo\EnQuickInfoControllerProvider.cs" />
     <Compile Include="QuickInfo\EnQuickInfoSource.cs" />
     <Compile Include="QuickInfo\EnQuickInfoSourceProvider.cs" />
     <Compile Include="utility\MakeInfoItem.cs" />
-    <Compile Include="utility\SignatureTools.cs" />
     <Compile Include="utility\utlis.cs" />
-    <Compile Include="vsix_EnTranslatePackage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source.extension.vsixmanifest">
@@ -78,29 +72,14 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common">
-      <Version>4.6.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.5.33428.388" ExcludeAssets="runtime">
-      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.6.1112-alpha" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.0.32112.339" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.5.4065" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EnTranslate\EnTranslate.csproj">
-      <Project>{4d0498b7-fc49-4e0a-acca-161e3dc1c040}</Project>
+      <Project>{4D0498B7-FC49-4E0A-ACCA-161E3DC1C040}</Project>
       <Name>EnTranslate</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Logo.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="view.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />

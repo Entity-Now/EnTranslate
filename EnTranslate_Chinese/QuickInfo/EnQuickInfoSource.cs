@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Editor;
+﻿using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text.Operations;
-using Microsoft.VisualStudio.Text.Tagging;
-using Microsoft.VisualStudio.Utilities;
-using EnTranslate.utility;
+using Microsoft.VisualStudio.Text;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
-using vsix_EnTranslate.utility;
+using System.Threading.Tasks;
+using EnTranslate.utility;
+using EnTranslate_Chinese.utility;
 
-namespace vsix_EnTranslate.QuickInfo
+namespace EnTranslate_Chinese.QuickInfo
 {
     internal class EnQuickInfoSource : IQuickInfoSource
     {

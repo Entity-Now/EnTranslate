@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using Task = System.Threading.Tasks.Task;
 
-namespace vsix_EnTranslate
+namespace EnTranslate_Chinese
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -24,13 +24,13 @@ namespace vsix_EnTranslate
     /// </para>
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [Guid(vsix_EnTranslatePackage.PackageGuidString)]
-    public sealed class vsix_EnTranslatePackage : AsyncPackage
+    [Guid(EnTranslate_ChinesePackage.PackageGuidString)]
+    public sealed class EnTranslate_ChinesePackage : AsyncPackage
     {
         /// <summary>
-        /// vsix_EnTranslatePackage GUID string.
+        /// EnTranslate_ChinesePackage GUID string.
         /// </summary>
-        public const string PackageGuidString = "f524be93-ef68-40f1-a081-d6a7ca2c7aeb";
+        public const string PackageGuidString = "cae0b421-0c75-475e-a9ec-cde6a979feba";
 
         #region Package Members
 

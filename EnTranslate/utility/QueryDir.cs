@@ -17,38 +17,45 @@ namespace EnTranslate.utility
         /// <returns></returns>
         public static Dictionarys getDir(string word)
         {
-            if (string.IsNullOrEmpty(word) && word.Length < 2)
+            try
+            {
+                if (string.IsNullOrEmpty(word) || word.Length < 2)
+                {
+                    return null;
+                }
+                string prefix = word.Substring(0, 2);
+                string dir = utility.utlis.ReadEmbeddedResource($"EnTranslate.Translates.{prefix.ToLower()}.json");
+
+                // 转换为 JSON 对象
+                JObject jsonObject = JObject.Parse(dir);
+
+                if (jsonObject.TryGetValue(word, out JToken value))
+                {
+                    if (value.Type == JTokenType.String)
+                    {
+                        return new Dictionarys
+                        {
+                            key = word,
+                            t = value.ToString()
+                        };
+                    }
+                    else if (value.Type == JTokenType.Object)
+                    {
+                        Dictionarys dictionaryValue = value.ToObject<Dictionarys>();
+                        if (dictionaryValue != null)
+                        {
+                            dictionaryValue.key = word;
+                            return dictionaryValue;
+                        }
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception)
             {
                 return null;
             }
-            string prefix = word.Substring(0, 2);
-            string dir = utility.utlis.ReadEmbeddedResource($"EnTranslate.Translates.{prefix.ToLower()}.json");
-
-            // 转换为 JSON 对象
-            JObject jsonObject = JObject.Parse(dir);
-
-            if (jsonObject.TryGetValue(word, out JToken value))
-            {
-                if (value.Type == JTokenType.String)
-                {
-                    return new Dictionarys 
-                    {
-                        key = word,
-                        t = value.ToString()
-                    };
-                }
-                else if (value.Type == JTokenType.Object)
-                {
-                    Dictionarys dictionaryValue = value.ToObject<Dictionarys>();
-                    if (dictionaryValue != null)
-                    {
-                        dictionaryValue.key = word;
-                        return dictionaryValue;
-                    }
-                }
-            }
-
-            return null;
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace vsix_EnTranslate.utility
+namespace EnTranslate_Chinese.utility
 {
     public static class utlis
     {
