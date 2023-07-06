@@ -20,11 +20,8 @@ namespace EnTranslate.utility
         {
             try
             {
-                if (string.IsNullOrEmpty(word))
-                {
-                    return null;
-                }
-                if (word.Length < 2 || word == "." || word == " ")
+                word = word.Trim();
+                if (string.IsNullOrEmpty(word) || word.Length < 2)
                 {
                     return null;
                 }

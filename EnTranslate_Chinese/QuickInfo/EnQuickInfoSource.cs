@@ -41,11 +41,11 @@ namespace EnTranslate_Chinese.QuickInfo
                 // 在范围内查找我们的 QuickInfo 单词的出现
                 ITextStructureNavigator navigator = m_provider.NavigatorService.GetTextStructureNavigator(m_subjectBuffer);
                 TextExtent extent = navigator.GetExtentOfWord(subjectTriggerPoint.Value);
-                string searchText = extent.Span.GetText();
+                string searchText = extent.Span.GetText().Trim();
 
                 // 判断字符串是否包含中文
                 bool containsChinese = Regex.IsMatch(searchText, @"[\u4e00-\u9fff]");
-                if (string.IsNullOrEmpty(searchText) || searchText.Length < 2 || containsChinese)
+                if (containsChinese)
                 {
                     applicableToSpan = null;
                     return;

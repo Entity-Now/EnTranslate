@@ -4,7 +4,7 @@ namespace testTranslate
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var word = Console.ReadLine();
             var words = ParseString.getWordArray(word);

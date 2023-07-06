@@ -32,7 +32,7 @@ namespace EnTranslate_Chinese.QuickInfo
                     {
                         if (_debounce == null)
                         {
-                            _debounce = utlis.Debounce(50);
+                            _debounce = utlis.Debounce(5);
                         }
                     }
                 }

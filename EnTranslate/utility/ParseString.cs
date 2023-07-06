@@ -18,23 +18,26 @@ namespace EnTranslate.utility
         /// <returns></returns>
         public static IEnumerable<string> getWordArray(string character)
         {
-            List<string> Words = new List<string>(); 
             if (string.IsNullOrEmpty(character) && character.Length < 2)
             {
-                return Words;
+                return null;
             }
+            List<string> Words = new List<string>();
             var RegexValue = Regex.Matches(character, @"[A-Z\s]{2,}").Cast<Match>();
-            if (RegexValue.Count() > 0) 
-            character = RegexValue.Select(I =>
+            if (RegexValue.Count() > 0 )
             {
-                string tempValue = I.Value;
-                // 将大写的单词转换为小写的
-                return tempValue.Replace(tempValue, Pascalize(tempValue.ToLower()));
-            }).Aggregate(string.Empty,(totall, current) =>
-            {
-                /** 将字符串连接起来 */
-                return totall + current;
-            });
+                character = RegexValue.Select(I =>
+                {
+                    string tempValue = I.Value;
+                    // 将大写的单词转换为小写的
+                    return tempValue.Replace(tempValue, Pascalize(tempValue.ToLower()));
+                }).Aggregate(string.Empty, (totall, current) =>
+                {
+                    /** 将字符串连接起来 */
+                    return totall + current;
+                });
+            }
+
             // 判断是否是字母并且全部大写
             if (Regex.IsMatch(character, @"^[A-Z]+$"))
             {
