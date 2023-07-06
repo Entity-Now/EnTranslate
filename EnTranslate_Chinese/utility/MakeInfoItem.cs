@@ -54,7 +54,7 @@ namespace EnTranslate_Chinese.utility
             stackPanel.Children.Add(title);
 
             // 创建内容文本块
-            var SplitWord = val.t.Replace(@"\n", "@@$$$@@").Split(new string[] { "@@$$$@@" }, StringSplitOptions.None);
+            var SplitWord = val.t.Split(new string[] { @"\n" }, StringSplitOptions.None);
             foreach (var item in SplitWord)
             {
                 var contentTextBlock = new TextBlock();

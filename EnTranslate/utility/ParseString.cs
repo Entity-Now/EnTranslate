@@ -96,6 +96,10 @@ namespace EnTranslate.utility
         // 大驼峰命名法
         public static string Pascalize(string input)
         {
+            if ( input.Length < 1)
+            {
+                return input;
+            }
             string camelized = Camelize(input);
             // 将首字母转换为大写
             return char.ToUpper(camelized[0]) + camelized.Substring(1);

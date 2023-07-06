@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EnTranslate.Model;
 using Newtonsoft.Json.Linq;
@@ -19,13 +20,20 @@ namespace EnTranslate.utility
         {
             try
             {
-                if (string.IsNullOrEmpty(word) || word.Length < 2)
+                if (string.IsNullOrEmpty(word))
+                {
+                    return null;
+                }
+                if (word.Length < 2 || word == "." || word == " ")
                 {
                     return null;
                 }
                 string prefix = word.Substring(0, 2);
-                string dir = utility.utlis.ReadEmbeddedResource($"EnTranslate.Translates.{prefix.ToLower()}.json");
-
+                string dir = utlis.ReadEmbeddedResource($"EnTranslate.Translates.{prefix.ToLower()}.json");
+                if (string.IsNullOrEmpty(dir) || dir is null)
+                {
+                    return null;
+                }
                 // 转换为 JSON 对象
                 JObject jsonObject = JObject.Parse(dir);
 

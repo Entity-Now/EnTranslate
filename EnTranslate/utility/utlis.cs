@@ -16,25 +16,31 @@ namespace EnTranslate.utility
         /// </summary>
         /// <param name="resourceName"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
         public static string ReadEmbeddedResource(string resourceName)
         {
-            // 获取当前程序集
-            Assembly assembly = Assembly.GetExecutingAssembly();
-
-            // 获取资源流
-            using (Stream resourceStream = assembly.GetManifestResourceStream(resourceName))
+            try
             {
-                if (resourceStream == null)
-                {
-                    throw new ArgumentException($"Resource '{resourceName}' not found.");
-                }
+                // 获取当前程序集
+                Assembly assembly = Assembly.GetExecutingAssembly();
 
-                // 使用资源流进行操作
-                using (StreamReader reader = new StreamReader(resourceStream))
+                // 获取资源流
+                using (Stream resourceStream = assembly.GetManifestResourceStream(resourceName))
                 {
-                    return reader.ReadToEnd();
+                    if (resourceStream == null)
+                    {
+                        return null;
+                    }
+
+                    // 使用资源流进行操作
+                    using (StreamReader reader = new StreamReader(resourceStream))
+                    {
+                        return reader.ReadToEnd();
+                    }
                 }
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 

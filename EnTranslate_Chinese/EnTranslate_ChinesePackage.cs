@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -25,6 +26,9 @@ namespace EnTranslate_Chinese
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [Guid(EnTranslate_ChinesePackage.PackageGuidString)]
+
+    [ProvideAutoLoad(UIContextGuids.NoSolution)]//设置当VS打开的时候就运行本类
+    [ProvideAutoLoad(UIContextGuids.SolutionExists)]//同上
     public sealed class EnTranslate_ChinesePackage : AsyncPackage
     {
         /// <summary>
