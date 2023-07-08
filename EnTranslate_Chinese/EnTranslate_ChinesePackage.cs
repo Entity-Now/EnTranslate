@@ -27,8 +27,8 @@ namespace EnTranslate_Chinese
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [Guid(EnTranslate_ChinesePackage.PackageGuidString)]
 
-    [ProvideAutoLoad(UIContextGuids.NoSolution)]//设置当VS打开的时候就运行本类
-    [ProvideAutoLoad(UIContextGuids.SolutionExists)]//同上
+    //[ProvideAutoLoad(UIContextGuids.NoSolution)]//设置当VS打开的时候就运行本类
+    //[ProvideAutoLoad(UIContextGuids.SolutionExists)]//同上
     public sealed class EnTranslate_ChinesePackage : AsyncPackage
     {
         /// <summary>

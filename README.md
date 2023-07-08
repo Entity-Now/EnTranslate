@@ -16,11 +16,15 @@ EnTranslate内部实现方法借鉴于vscode插件[Code Translate](https://githu
 ## 预览
 
 - 鼠标悬停翻译、自动拆分单词组合
-![滑词翻译单词](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/view.png)
+    ![滑词翻译单词](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/view.png)
+- 可以翻译注释中的单词
+    ![翻译注释](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/view2.png)
+- 翻译xml中的单词，甚至json中的单词都可以翻译
+    ![翻译xml中的单词](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/view3.png)
 
 ## 计划
-- [x] 翻译注释文档的功能
-- [x] 支持更低版本的vs
+- [ ] 翻译注释文档的功能
+- [ ] 支持更低版本的vs
 
 ## 更新
 
