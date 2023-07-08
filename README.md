@@ -8,10 +8,19 @@
 
 EnTranslate内部实现方法借鉴于vscode插件[Code Translate](https://github.com/w88975/code-translate-vscode) ，感谢w88975作者将其开源。
 
+## 安装
+> 只支持vs 2022哈，以前的vs版本是32位的所以我还不知道怎么设置才能支持。有知道的老哥帮忙提个意见。
+
+[下载地址](https://marketplace.visualstudio.com/items?itemName=Entity-Now.Translate)
+
 ## 预览
 
 - 鼠标悬停翻译、自动拆分单词组合
 ![滑词翻译单词](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/view.png)
+
+## 计划
+- [x] 翻译注释文档的功能
+- [x] 支持更低版本的vs
 
 ## 更新
 
