@@ -1,8 +1,7 @@
-# EnTranslate的由来
+# EnTranslate一款简单的划词翻译插件
 
-## 简洁
-EnTranslate是一款纯粹的滑词翻译软件
-1. 支持滑词翻译
+## 简介
+1. 支持划词翻译（鼠标悬浮到单词上方将自动翻译）
 2. 支持调用百度翻译接口翻译注释文档
 3. 强大的单词拆分能力: 支持驼峰, 下划线形式等各种单词拆分
 4. 丰富的本地词库: 包含 340 万+离线单词, 支持各种生僻单词
@@ -12,4 +11,13 @@ EnTranslate内部实现方法借鉴于vscode插件[Code Translate](https://githu
 ## 预览
 
 - 鼠标悬停翻译、自动拆分单词组合
-![滑词翻译单词](/docs/view.png)
+![滑词翻译单词](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/view.png)
+
+## 更新
+
+1. 2023.7.16 
+    - 修复光标悬浮在特殊字符上面会导致vs崩溃的问题。
+    - 其他bug
+
+2. xxxx....
+
