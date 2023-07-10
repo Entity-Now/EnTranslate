@@ -1,5 +1,9 @@
-﻿using System;
+﻿using EnvDTE;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,5 +22,6 @@ namespace EnTranslate_Chinese.utility
         {
             return new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
         }
+
     }
 }
