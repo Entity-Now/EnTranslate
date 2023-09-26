@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="TranlateIntoChinese.View.TranslateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TranlateIntoChinese.View"
+             xmlns:Colors="clr-namespace:TranlateIntoChinese.Utility"
+             mc:Ignorable="d" 
+             d:DesignHeight="120" d:DesignWidth="200">
+    <Border CornerRadius="10,10,10,10"
+            Background="{Binding Source={x:Static Colors:ColorHelper.Background}}">
+        <StackPanel Orientation="Vertical" Margin="10">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="翻译前的内容"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="{Binding Source={x:Static Colors:ColorHelper.Primary}}"/>
+                <TextBlock Margin="10 0">
+                    <Run Text=""/>
+                </TextBlock>
+                <TextBlock Text="音标注释" Foreground="{Binding Source={x:Static Colors:ColorHelper.Second}}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+            <TextBlock Text="说明" 
+                       Margin="0 10"
+                       Foreground="{Binding Source={x:Static Colors:ColorHelper.Text}}"
+                       TextWrapping="Wrap"/>
+        </StackPanel>
+    </Border>
+</UserControl>
