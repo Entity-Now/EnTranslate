@@ -17,22 +17,32 @@ namespace TranlateIntoChinese.Utility
             // 创建SpeechSynthesizer对象
             using (SpeechSynthesizer synth = new SpeechSynthesizer())
             {
-                // 设置讲述人的声音
-                //synth.SelectVoiceByHints(VoiceGender.NotSet, VoiceAge.NotSet);
-                //synth.SetOutputToDefaultAudioDevice();
-                var voice = Config.GlobalConfig.SelectedVoice;
-                if (!string.IsNullOrEmpty(voice))
+                try
                 {
-                    synth.SelectVoice(voice);
+                    // 设置讲述人的声音
+                    //synth.SelectVoiceByHints(VoiceGender.NotSet, VoiceAge.NotSet);
+                    var voice = Config.GlobalConfig.SelectedVoice;
+                    if (voice != null && !string.IsNullOrEmpty(voice))
+                    {
+                        synth.SelectVoice(voice);
+                    }
+                    else
+                    {
+                        synth.SetOutputToDefaultAudioDevice();
+                    }
+                    // 设置音量（0到100）
+                    synth.Volume = (int)Config.GlobalConfig.Sound;
+
+                    // 设置语速（-10到10）
+                    synth.Rate = (int)Config.GlobalConfig.SpeechSpeed;
+
+                    // 调用Speak方法让讲述人说出文本
+                    synth.Speak(text);
                 }
-                // 设置音量（0到100）
-                synth.Volume = (int)Config.GlobalConfig.Sound;
-
-                // 设置语速（-10到10）
-                synth.Rate = (int)Config.GlobalConfig.SpeechSpeed;
-
-                // 调用Speak方法让讲述人说出文本
-                synth.Speak(text);
+                catch (Exception ex)
+                {
+                    ex.Log();
+                }
             }
         }
         public static ReadOnlyCollection<InstalledVoice> GetInstallVoice()
@@ -40,8 +50,16 @@ namespace TranlateIntoChinese.Utility
             // 创建SpeechSynthesizer对象
             using (SpeechSynthesizer synth = new SpeechSynthesizer())
             {
-                // 获取所有可用的语音
-                return synth.GetInstalledVoices();
+                try
+                {
+                    // 获取所有可用的语音
+                    return synth.GetInstalledVoices();
+                }
+                catch (Exception ex)
+                {
+                    ex.Log();
+                    return null;
+                }
             }
         }
     }

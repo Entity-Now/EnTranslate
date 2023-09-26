@@ -68,7 +68,7 @@ namespace TranlateIntoChinese.Core
                 OnPropertyChanged();
             }
         }
-        public ObservableCollection<string> _voiceList = new ObservableCollection<string>() { "暂且为空" };
+        public ObservableCollection<string> _voiceList = new ObservableCollection<string>() {  };
 
         public ObservableCollection<string> VoiceList
         {
@@ -94,7 +94,7 @@ namespace TranlateIntoChinese.Core
         }
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            if (VoiceList.Count > 1) return; 
+            if (VoiceList.Count > 0) return; 
             var voiceList = SystemHelper.GetInstallVoice().Select(I => I.VoiceInfo.Name);
             foreach (var item in voiceList)
             {

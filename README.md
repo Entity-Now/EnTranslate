@@ -16,6 +16,11 @@ EnTranslate内部实现方法借鉴于vscode插件[Code Translate](https://githu
 ![白色主题](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/white.png)
 ![设置界面](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/settings.png)
 
+## 支持
+> 如果觉得插件好用，麻烦帮忙点个star。
+> 如果你发现如何bug，你可以提交issue，我看到会尽快修复。
+
+
 ## 更新
 1. 2023.9.26
    - 更新到v2版本，使用新的api（更稳定）
