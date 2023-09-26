@@ -20,6 +20,8 @@ EnTranslate内部实现方法借鉴于vscode插件[Code Translate](https://githu
 > 如果觉得插件好用，麻烦帮忙点个star。
 > 如果你发现如何bug，你可以提交issue，我看到会尽快修复。
 
+## 下载
+[vs 官方下载](https://marketplace.visualstudio.com/items?itemName=Entity-Now.Translate);
 
 ## 更新
 1. 2023.9.26
