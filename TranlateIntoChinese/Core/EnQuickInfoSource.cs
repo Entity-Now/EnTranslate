@@ -48,7 +48,7 @@ namespace TranlateIntoChinese.Core
                 ContainerElementStyle.Stacked,
                 new ContainerElement(ContainerElementStyle.Wrapped,
                     Icon,
-                    ClassifiedTextElement.CreateHyperlink("试听", "英语发音", () =>
+                    ClassifiedTextElement.CreateHyperlink("播放", "播放英语发音", () =>
                     {
                         SystemHelper.PlayVoice(val.key);
                     }),
@@ -56,6 +56,23 @@ namespace TranlateIntoChinese.Core
                 ),
                 new ClassifiedTextElement(new ClassifiedTextRun(PredefinedClassificationTypeNames.NaturalLanguage, val.t.Replace(@"\n","\n")))
             );
+        }
+        private ContainerElement createNofoundElement(string Word)
+        {
+            var baiduLink = ClassifiedTextElement.CreateHyperlink(" 百度翻译 ", "跳转到百度翻译", () =>
+            {
+                SystemHelper.JumpBrowser($"https://fanyi.baidu.com/#en/zh/{Word}");
+            });
+            var googleLink = ClassifiedTextElement.CreateHyperlink(" 谷歌翻译 ", "跳转到google翻译", () =>
+            {
+                SystemHelper.JumpBrowser($"https://fanyi.baidu.com/#en/zh/{Word}");
+            });
+            return new ContainerElement(
+                ContainerElementStyle.Wrapped,
+                new ClassifiedTextElement(new ClassifiedTextRun(PredefinedClassificationTypeNames.MarkupAttributeValue, $"{Word},本地词库暂无结果，查看：")),
+                baiduLink,
+                googleLink
+                ); ;
         }
         public async Task<QuickInfoItem> GetQuickInfoItemAsync(IAsyncQuickInfoSession session, CancellationToken cancellationToken)
         {
@@ -94,6 +111,10 @@ namespace TranlateIntoChinese.Core
                         if (TranslateVal != null)
                         {
                             wordElement.Add(createElement(TranslateVal));
+                        }
+                        else if(!string.IsNullOrWhiteSpace(item.Trim()))
+                        {
+                            wordElement.Add(createNofoundElement(item));
                         }
                     }
                 }

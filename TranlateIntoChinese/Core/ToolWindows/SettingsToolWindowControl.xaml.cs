@@ -89,7 +89,7 @@ namespace TranlateIntoChinese.Core
 
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
-            Config.Save();
+            await Config.Save();
             await VS.StatusBar.ShowMessageAsync("保存成功！");
         }
         private void Grid_Loaded(object sender, RoutedEventArgs e)
@@ -99,10 +99,6 @@ namespace TranlateIntoChinese.Core
             foreach (var item in voiceList)
             {
                 VoiceList.Add(item);
-                if (item == Config.GlobalConfig.SelectedVoice)
-                {
-
-                }
             }
         }
 

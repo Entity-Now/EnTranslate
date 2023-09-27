@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Speech.Synthesis;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +14,33 @@ namespace TranlateIntoChinese.Utility
 {
     internal class SystemHelper
     {
+        public static void JumpBrowser(string url)
+        {
+            try
+            {
+                Process.Start(url);
+            }
+            catch (Exception ex)
+            {
+                ex.Log();
+            }
+        }
+        public static string GetCurrentPath()
+        {
+            // 获取当前执行程序的 Assembly
+            Assembly currentAssembly = Assembly.GetExecutingAssembly();
+
+            // 获取当前 DLL 文件的位置
+            string assemblyLocation = currentAssembly.Location;
+
+            // 获取 DLL 所在目录
+            string assemblyDirectory = System.IO.Path.GetDirectoryName(assemblyLocation);
+            return assemblyDirectory;
+        }
+        public static string GetMyDocumentPath()
+        {
+            return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        }
         public static void PlayVoice(string text)
         {
             // 创建SpeechSynthesizer对象
@@ -22,7 +51,7 @@ namespace TranlateIntoChinese.Utility
                     // 设置讲述人的声音
                     //synth.SelectVoiceByHints(VoiceGender.NotSet, VoiceAge.NotSet);
                     var voice = Config.GlobalConfig.SelectedVoice;
-                    if (voice != null && !string.IsNullOrEmpty(voice))
+                    if (!string.IsNullOrEmpty(voice))
                     {
                         synth.SelectVoice(voice);
                     }

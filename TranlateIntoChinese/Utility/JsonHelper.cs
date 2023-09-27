@@ -22,7 +22,7 @@ namespace TranlateIntoChinese.Utility
         {
             try
             {
-                if (Directory.Exists(path))
+                if (!File.Exists(path))
                 {
                     return default;
                 }
@@ -39,7 +39,7 @@ namespace TranlateIntoChinese.Utility
         {
             try
             {
-                if (Directory.Exists(path))
+                if (!File.Exists(path))
                 {
                     return false;
                 }

@@ -6,6 +6,7 @@
              xmlns:colors="clr-namespace:TranlateIntoChinese.Utility"
              xmlns:view="clr-namespace:TranlateIntoChinese.View"
              Background="{Binding Source={x:Static colors:ColorHelper.Background}}"
+             MinWidth="350"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="500"
@@ -21,7 +22,7 @@
                     白色主题
                 </view:CellControl.O_Title>
                 <view:CellControl.O_Content>
-                    切换到白色的主题
+                    设置界面切换到白色的主题（显示翻译内容的主题是跟随vs编辑器主题变化的）
                 </view:CellControl.O_Content>
                 <view:CellControl.O_Handle>
                     <CheckBox IsChecked="{Binding IsLight}"/>

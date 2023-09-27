@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Imaging;
+using Microsoft.VisualStudio.Imaging.Interop;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using TranlateIntoChinese.Utility;
@@ -9,13 +13,27 @@ namespace TranlateIntoChinese.Model
 {
     public class Config
     {
-        public static string Path = "_ETConfig.json";
-        public static Config GlobalConfig = null;
+        public static string SettingsPath { get; set; }
+        public static Config GlobalConfig { get; set; } = new Config();
         public static void Load()
         {
             try
             {
-                GlobalConfig = JsonHelper.ReadJson<Config>(Config.Path) ?? new Config();
+                string documentPath = SystemHelper.GetMyDocumentPath() + "\\TranslateIntoChinese\\";
+                if (!Directory.Exists(documentPath))
+                {
+                    Directory.CreateDirectory(documentPath);
+                }
+
+                SettingsPath = Path.Combine(documentPath, "TC_Config.json");
+
+                if (!File.Exists(SettingsPath))
+                {
+                    return;
+                }
+
+                GlobalConfig = JsonHelper.ReadJson<Config>(SettingsPath);
+
                 if (GlobalConfig.ThemeIsLight)
                 {
                     ColorHelper.LightColor();
@@ -23,14 +41,22 @@ namespace TranlateIntoChinese.Model
             }
             catch (Exception ex)
             {
-                ex.Log();
+                ex.Log(); 
             }
         }
-        public static void Save() 
+
+        public static async Task Save() 
         {
             try
             {
-                JsonHelper.WriteJson(GlobalConfig, Config.Path);
+                JsonHelper.WriteJson(GlobalConfig, SettingsPath);
+                var infoBar = await VS.InfoBar.CreateAsync(new InfoBarModel($"成功保存到:{SettingsPath}"));
+                await infoBar.TryShowInfoBarUIAsync();
+                await Task.Run(async () =>
+                {
+                    await Task.Delay(3000);
+                    infoBar.Close();
+                });
             }
             catch (Exception ex)
             {
