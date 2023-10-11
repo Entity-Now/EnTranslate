@@ -9,6 +9,9 @@
 
 EnTranslate内部实现方法借鉴于vscode插件[Code Translate](https://github.com/w88975/code-translate-vscode) ，感谢w88975作者将其开源。
 
+## 下载
+[vs 官方下载](https://marketplace.visualstudio.com/items?itemName=Entity-Now.Translate);
+
 ## 预览
 
 - 鼠标悬停翻译、自动拆分单词组合
@@ -20,8 +23,6 @@ EnTranslate内部实现方法借鉴于vscode插件[Code Translate](https://githu
 > 如果觉得插件好用，麻烦帮忙点个star。
 > 如果你发现如何bug，你可以提交issue，我看到会尽快修复。
 
-## 下载
-[vs 官方下载](https://marketplace.visualstudio.com/items?itemName=Entity-Now.Translate);
 
 ## 计划
     [x] 支持在线翻译
@@ -45,3 +46,7 @@ EnTranslate内部实现方法借鉴于vscode插件[Code Translate](https://githu
     - 修改配置存放路径
     - 添加在词库中找不到单词的提示
     - 修复一些问题
+
+4. 2023.10.11
+    - 修改分词代码
+    - ...

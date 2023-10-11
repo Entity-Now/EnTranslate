@@ -31,7 +31,8 @@ namespace TranlateIntoChinese.Core
         public void TextViewCreated(IWpfTextView textView)
         {
             wpfTextView = textView;
-            wpfTextView.Selection.SelectionChanged += Selection_SelectionChange;
+            // 暂时不启用
+            //wpfTextView.Selection.SelectionChanged += Selection_SelectionChange;
             //wpfTextView.Selection.
         }
         public void Selection_SelectionChange(object sender, EventArgs e)

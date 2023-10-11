@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TranlateIntoChinese {
+namespace TranslateIntoChinese {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace TranlateIntoChinese {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TranlateIntoChinese.ProjectInfo", typeof(ProjectInfo).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TranslateIntoChinese.ProjectInfo", typeof(ProjectInfo).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

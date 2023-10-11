@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="vsix_EnTranslate.922bb0c3-ecc3-4e62-b60e-6a51f090bc7f" Version="1.3.2" Language="zh-Hans" Publisher="Entity-now" />
-        <DisplayName>TranlateIntoChinese</DisplayName>
-        <Description xml:space="preserve">EnTranslate是一款功能强大的离线划词翻译插件，拥有超过340万条离线词库，能够准确翻译各种生僻单词。作为Visual Studio的VSIX插件，它为您提供了出色的英语单词翻译功能，而且具备灵活的单词拆分能力，支持驼峰命名和下划线命名等多种形式的单词拆分。无论您是在编写代码还是阅读文档，EnTranslate都是您的最佳翻译助手。</Description>
+        <Identity Id="vsix_EnTranslate.922bb0c3-ecc3-4e62-b60e-6a51f090bc7f" Version="1.3.3" Language="zh-Hans" Publisher="Entity-now" />
+        <DisplayName>TranslateIntoChinese</DisplayName>
+        <Description xml:space="preserve">TranslateIntoChinese是一款功能强大的离线划词翻译插件，拥有超过340万条离线词库，能够准确翻译各种生僻单词。作为Visual Studio的VSIX插件，它为您提供了出色的英语单词翻译功能，而且具备灵活的单词拆分能力，支持驼峰命名和下划线命名等多种形式的单词拆分。无论您是在编写代码还是阅读文档，TranslateIntoChinese都是您的最佳翻译助手。</Description>
         <MoreInfo>https://github.com/Entity-Now/EnTranslate</MoreInfo>
         <Icon>Logo.ico</Icon>
         <PreviewImage>Resources\Icon.png</PreviewImage>
@@ -20,7 +20,7 @@
         </InstallationTarget>
     </Installation>
     <Prerequisites>
-        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,)" DisplayName="Visual Studio core editor" />
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[14.0,)" DisplayName="Visual Studio core editor" />
     </Prerequisites>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />

@@ -1,4 +1,5 @@
 ﻿using EnTranslate.utility;
+using System.Text.RegularExpressions;
 
 namespace testTranslate
 {
@@ -7,6 +8,7 @@ namespace testTranslate
         static void Main()
         {
             var word = Console.ReadLine();
+
             var words = ParseString.getWordArray(word);
             foreach (var item in words)
             {
