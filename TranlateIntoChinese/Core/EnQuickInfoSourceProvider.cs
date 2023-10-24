@@ -7,8 +7,9 @@ using System.ComponentModel.Composition;
 namespace TranlateIntoChinese.Core
 {
     [Export(typeof(IAsyncQuickInfoSourceProvider))]
-    [Order(Before = "default")]
-    [ContentType("text")]
+    [Name("ToolTip QuickInfo Source")]
+    [Order(Before = "Default Quick Info Presenter")]
+    [ContentType("csharp"), ContentType("C/C++"), ContentType("css"), ContentType("F#"), ContentType("JScript"), ContentType("Json")]
     internal class EnQuickInfoSourceProvider : IAsyncQuickInfoSourceProvider
     {
         [Import]

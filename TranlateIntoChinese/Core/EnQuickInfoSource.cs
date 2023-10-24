@@ -83,8 +83,7 @@ namespace TranlateIntoChinese.Core
                 SnapshotPoint? subjectTriggerPoint = session.GetTriggerPoint(_textBuffer.CurrentSnapshot);
                 if (!subjectTriggerPoint.HasValue)
                 {
-                    applicableToSpan = null;
-                    return null;
+                    return default;
                 }
                 ITextSnapshot currentSnapshot = subjectTriggerPoint.Value.Snapshot;
                 SnapshotSpan querySpan = new SnapshotSpan(subjectTriggerPoint.Value, 0);
@@ -98,7 +97,7 @@ namespace TranlateIntoChinese.Core
                 bool containsChinese = Regex.IsMatch(searchText, @"[\u4e00-\u9fff]");
                 if (containsChinese)
                 {
-                    return null;
+                    return default;
                 }
                 List<ContainerElement> wordElement = new List<ContainerElement>();
                 // 分割单词
@@ -119,14 +118,14 @@ namespace TranlateIntoChinese.Core
                     }
                 }
                 var translateContainer = new ContainerElement(ContainerElementStyle.Stacked ,wordElement);
-
+                
                 var result = new QuickInfoItem(applicableToSpan, translateContainer);
                 return result;
             }
             catch (Exception ex)
             {
                 await ex.LogAsync();
-                return null;
+                return default;
             }
         }
     }
