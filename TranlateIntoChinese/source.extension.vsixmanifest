@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="TranlateIntoChinese.d5663168-0b3d-483d-9665-f8bdc90e94aa" Version="1.3.6" Language="zh-Hans" Publisher="Entity-now" />
-        <DisplayName>TranslateIntoChinese</DisplayName>
+        <Identity Id="TranslateIntoChinese_32.36E52704-C09A-9ACD-9D78-B82A56AC30ED" Version="1.3.6" Language="zh-Hans" Publisher="Entity-now" />
+        <DisplayName>TranslateIntoChinese_32</DisplayName>
         <Description xml:space="preserve">TranslateIntoChinese是一款功能强大的离线划词翻译插件，拥有超过340万条离线词库，能够准确翻译各种生僻单词。作为Visual Studio的VSIX插件，它为您提供了出色的英语单词翻译功能，而且具备灵活的单词拆分能力，支持驼峰命名和下划线命名等多种形式的单词拆分。无论您是在编写代码还是阅读文档，TranslateIntoChinese都是您的最佳翻译助手。</Description>
         <MoreInfo>https://github.com/Entity-Now/EnTranslate</MoreInfo>
         <Icon>Logo.ico</Icon>
         <PreviewImage>Resources\Icon.png</PreviewImage>
     </Metadata>
     <Installation>
-        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
-            <ProductArchitecture>amd64</ProductArchitecture>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0, 16.0)">
+            <ProductArchitecture>x86</ProductArchitecture>
         </InstallationTarget>
-        <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Pro">
-            <ProductArchitecture>amd64</ProductArchitecture>
+        <InstallationTarget Version="[14.0, 16.0)" Id="Microsoft.VisualStudio.Pro">
+            <ProductArchitecture>x86</ProductArchitecture>
         </InstallationTarget>
-        <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Enterprise">
-            <ProductArchitecture>amd64</ProductArchitecture>
+        <InstallationTarget Version="[14.0, 16.0)" Id="Microsoft.VisualStudio.Enterprise">
+            <ProductArchitecture>x86</ProductArchitecture>
         </InstallationTarget>
     </Installation>
     <Prerequisites>
         <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[14.0,)" DisplayName="Visual Studio core editor" />
-        <Prerequisite Id="Microsoft.VisualStudio.Component.VSSDK" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />
     </Prerequisites>
     <Assets>
         <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
