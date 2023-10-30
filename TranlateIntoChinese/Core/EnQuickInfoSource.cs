@@ -22,6 +22,8 @@ using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Imaging;
 using System.Windows.Controls;
 using TranlateIntoChinese.Utility;
+using TranlateIntoChinese.Model;
+using Edge_tts_sharp;
 
 namespace TranlateIntoChinese.Core
 {
@@ -50,7 +52,15 @@ namespace TranlateIntoChinese.Core
                     Icon,
                     ClassifiedTextElement.CreateHyperlink("播放", "播放英语发音", () =>
                     {
-                        SystemHelper.PlayVoice(val.key);
+                        if (Config.GlobalConfig.IsEdgeTTs)
+                        {
+                            var voice = Edge_tts.GetVoice().FirstOrDefault(i => i.Name == Config.GlobalConfig.SelectedVoice);
+                            Edge_tts.PlayText(val.key, voice.Locale, voice.Name, voice.SuggestedCodec);
+                        }
+                        else
+                        {
+                            SystemHelper.PlayVoice(val.key);
+                        }
                     }),
                     new ClassifiedTextElement(Word, split, Dimension)
                 ),

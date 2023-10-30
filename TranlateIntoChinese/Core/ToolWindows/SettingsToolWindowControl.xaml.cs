@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -7,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using TranlateIntoChinese.Model;
 using TranlateIntoChinese.Utility;
+using Edge_tts_sharp;
 
 namespace TranlateIntoChinese.Core
 {
@@ -68,6 +71,16 @@ namespace TranlateIntoChinese.Core
                 OnPropertyChanged();
             }
         }
+        public bool IsEdgeTTs
+        {
+            get => Config.GlobalConfig.IsEdgeTTs;
+            set
+            {
+                Config.GlobalConfig.IsEdgeTTs = value;
+                _getVoice();
+                OnPropertyChanged();
+            }
+        }
         public ObservableCollection<string> _voiceList = new ObservableCollection<string>() {  };
 
         public ObservableCollection<string> VoiceList
@@ -92,14 +105,26 @@ namespace TranlateIntoChinese.Core
             await Config.Save();
             await VS.StatusBar.ShowMessageAsync("保存成功！");
         }
-        private void Grid_Loaded(object sender, RoutedEventArgs e)
+       void _getVoice()
         {
-            if (VoiceList.Count > 0) return; 
-            var voiceList = SystemHelper.GetInstallVoice().Select(I => I.VoiceInfo.Name);
+            VoiceList.Clear();
+            List<string> voiceList;
+            if (IsEdgeTTs)
+            {
+                voiceList = Edge_tts_sharp.Edge_tts.GetVoice().Select(i => i.Name).ToList();
+            }
+            else
+            {
+                voiceList = SystemHelper.GetInstallVoice().Select(I => I.VoiceInfo.Name).ToList();
+            }
             foreach (var item in voiceList)
             {
                 VoiceList.Add(item);
             }
+        }
+        private void Grid_Loaded(object sender, RoutedEventArgs e)
+        {
+            _getVoice();
         }
 
         private void Grid_Unloaded(object sender, RoutedEventArgs e)

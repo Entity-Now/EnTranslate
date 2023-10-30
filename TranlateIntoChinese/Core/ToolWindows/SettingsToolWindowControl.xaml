@@ -30,10 +30,21 @@
             </view:CellControl>
             <view:CellControl VerticalContentAlignment="Stretch">
                 <view:CellControl.O_Title>
+                    Edge 语音接口
+                </view:CellControl.O_Title>
+                <view:CellControl.O_Content>
+                    使用微软Edge语言包，声音更加自然。
+                </view:CellControl.O_Content>
+                <view:CellControl.O_Handle>
+                    <CheckBox IsChecked="{Binding IsEdgeTTs}"/>
+                </view:CellControl.O_Handle>
+            </view:CellControl>
+            <view:CellControl VerticalContentAlignment="Stretch">
+                <view:CellControl.O_Title>
                     声音
                 </view:CellControl.O_Title>
                 <view:CellControl.O_Content>
-                    选择系统内已下载的语音包
+                    选择播放单词时使用的语言包
                 </view:CellControl.O_Content>
                 <view:CellControl.O_Handle>
                     <ComboBox Width="163" ItemsSource="{Binding VoiceList}" SelectedItem="{Binding VoiceSelected}"/>

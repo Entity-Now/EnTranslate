@@ -39,10 +39,6 @@ namespace TranlateIntoChinese.Utility
         {
             try
             {
-                if (!File.Exists(path))
-                {
-                    return false;
-                }
                 File.WriteAllText(path, ObjectToJson(source));
                 return true;
             }

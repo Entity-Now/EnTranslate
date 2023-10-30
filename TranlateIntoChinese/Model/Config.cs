@@ -64,6 +64,7 @@ namespace TranlateIntoChinese.Model
             }
         }
         public bool ThemeIsLight { get; set; } = false;
+        public bool IsEdgeTTs { get; set; } = false;
         public string SelectedVoice { get; set; } = string.Empty;
         /// <summary>
         /// 声音大小，0,100
