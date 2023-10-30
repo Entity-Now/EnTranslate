@@ -24,6 +24,7 @@ using System.Windows.Controls;
 using TranlateIntoChinese.Utility;
 using TranlateIntoChinese.Model;
 using Edge_tts_sharp;
+using System.IO;
 
 namespace TranlateIntoChinese.Core
 {
@@ -52,10 +53,17 @@ namespace TranlateIntoChinese.Core
                     Icon,
                     ClassifiedTextElement.CreateHyperlink("播放", "播放英语发音", () =>
                     {
-                        if (Config.GlobalConfig.IsEdgeTTs)
+                        var globalConfig = Config.GlobalConfig;
+                        if (globalConfig.IsEdgeTTs)
                         {
-                            var voice = Edge_tts.GetVoice().FirstOrDefault(i => i.Name == Config.GlobalConfig.SelectedVoice);
-                            Edge_tts.PlayText(val.key, voice.Locale, voice.Name, voice.SuggestedCodec);
+                            string audioPath = $"{Config.AudioPath}\\{val.key}_{globalConfig.SpeechSpeed}.mp3";
+                            if (File.Exists(audioPath))
+                            {
+                                Audio.PlayAudio(audioPath, globalConfig.Sound / 100.0f);
+                                return;
+                            }
+                            var voice = Edge_tts.GetVoice().FirstOrDefault(i => i.Name == globalConfig.SelectedVoice);
+                            Edge_tts.PlayText(val.key, voice, (int)(globalConfig.SpeechSpeed * 10.0), audioPath);
                         }
                         else
                         {

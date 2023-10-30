@@ -33,7 +33,7 @@
                     Edge 语音接口
                 </view:CellControl.O_Title>
                 <view:CellControl.O_Content>
-                    使用微软Edge语言包，声音更加自然。
+                    使用微软Edge语言包，声音更加自然(需要联网，可能会有延迟)
                 </view:CellControl.O_Content>
                 <view:CellControl.O_Handle>
                     <CheckBox IsChecked="{Binding IsEdgeTTs}"/>

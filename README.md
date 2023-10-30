@@ -50,3 +50,8 @@ EnTranslate内部实现方法借鉴于vscode插件[Code Translate](https://githu
 4. 2023.10.11
     - 修改分词代码
     - ...
+
+5. 2023.10.30
+    - 支持使用微软Edge语言接口播放单词
+    - 修复一些问题
+    - ...

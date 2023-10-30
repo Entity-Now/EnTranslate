@@ -13,19 +13,24 @@ namespace TranlateIntoChinese.Model
 {
     public class Config
     {
-        public static string SettingsPath { get; set; }
+        public static string StoragePath { get; set; }
+        public static string SettingsPath
+        {
+            get => StoragePath + "TC_Config.json";
+        }
+        public static string AudioPath
+        {
+            get => StoragePath + "audio";
+        }
+
         public static Config GlobalConfig { get; set; } = new Config();
         public static void Load()
         {
             try
             {
-                string documentPath = SystemHelper.GetMyDocumentPath() + "\\TranslateIntoChinese\\";
-                if (!Directory.Exists(documentPath))
-                {
-                    Directory.CreateDirectory(documentPath);
-                }
-
-                SettingsPath = Path.Combine(documentPath, "TC_Config.json");
+                StoragePath = SystemHelper.GetMyDocumentPath() + "\\TranslateIntoChinese\\";
+                Directory.CreateDirectory(StoragePath);
+                Directory.CreateDirectory(AudioPath);
 
                 if (!File.Exists(SettingsPath))
                 {
