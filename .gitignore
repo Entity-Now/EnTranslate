@@ -1,2 +1,8 @@
+node_modules
 bin
 obj
+dist
+.temp
+.cache
+.vs
+.vscode
