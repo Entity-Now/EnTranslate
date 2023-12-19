@@ -21,7 +21,7 @@ EnTranslate内部实现方法借鉴于vscode插件[Code Translate](https://githu
 
 ## 支持
 > 如果觉得插件好用，麻烦帮忙点个star。
-> 如果你发现如何bug，你可以提交issue，我看到会尽快修复。
+> 如果你发现任何bug，你可以提交issue，我看到会尽快修复。
 
 
 ## 计划
