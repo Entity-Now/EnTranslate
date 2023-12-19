@@ -1,0 +1,5 @@
+
+User-agent:*
+Disallow:
+
+Sitemap: https://Entranslate.rdr2.cn/sitemap.xml
