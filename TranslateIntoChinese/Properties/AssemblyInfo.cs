@@ -2,12 +2,12 @@
 using System.Runtime.InteropServices;
 using TranslateIntoChinese;
 
-[assembly: AssemblyTitle(Vsix.Name)]
-[assembly: AssemblyDescription(Vsix.Description)]
+[assembly: AssemblyTitle("TranslateInfoChinese")]
+[assembly: AssemblyDescription("一款简单的VS 2022划词翻译插件")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany(Vsix.Author)]
+[assembly: AssemblyCompany("Entity-now")]
 [assembly: AssemblyProduct(Vsix.Name)]
-[assembly: AssemblyCopyright(Vsix.Author)]
+[assembly: AssemblyCopyright("Entity-now")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
