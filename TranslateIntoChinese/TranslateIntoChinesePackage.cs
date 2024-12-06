@@ -20,8 +20,6 @@ namespace TranslateIntoChinese
         {
             await this.RegisterCommandsAsync();
             this.RegisterToolWindows();
-            // load config
-            Config.Load();
         }
     }
 }

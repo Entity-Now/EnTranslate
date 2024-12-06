@@ -26,6 +26,9 @@ using TranslateIntoChinese.Model;
 using Edge_tts_sharp;
 using System.IO;
 using Edge_tts_sharp.Utils;
+using Edge_tts_sharp.Model;
+using System.Web;
+using System.Web.UI.WebControls;
 
 namespace TranslateIntoChinese.Core
 {
@@ -54,18 +57,28 @@ namespace TranslateIntoChinese.Core
                     Icon,
                     ClassifiedTextElement.CreateHyperlink("播放", "播放英语发音", () =>
                     {
-                        var globalConfig = Config.GlobalConfig;
-                        if (globalConfig.IsEdgeTTs)
+                        var sound = Constants.Config.Sound;
+                        var soundName = Constants.Config.SoundName;
+                        if (sound == Model.Enums.SoundType.Edge)
                         {
-                            float volume = globalConfig.Sound / 100.0f;
-                            string audioPath = $"{Config.AudioPath}\\{val.key}_{globalConfig.SpeechSpeed}_{globalConfig.Sound.ToString()}.mp3";
+                            string audioPath = Path.Combine(Constants.AudioPath, $"{val.key}.mp3");
                             if (File.Exists(audioPath))
                             {
-                                Audio.PlayAudio(audioPath);
+                                Audio.PlayAudioAsync(audioPath);
                                 return;
                             }
-                            var voice = Edge_tts.GetVoice().FirstOrDefault(i => i.Name == globalConfig.SelectedVoice);
-                            Edge_tts.PlayText(val.key, voice, (int)(globalConfig.SpeechSpeed * 10.0), volume, audioPath);
+                            var voice = Edge_tts.GetVoice().FirstOrDefault(i => string.IsNullOrEmpty(soundName) ? i.Name.Contains("zh-CN") : i.Name == soundName);
+                            Edge_tts.PlayText(new PlayOption { 
+                                Text = val.key,
+                                SavePath = audioPath,
+                            }, voice);
+                        }
+                        else if(Constants.Config.Sound == Model.Enums.SoundType.YouDao)
+                        {
+                            Audio.PlayAudioFromUrlAsync
+                            (
+                                $"https://dict.youdao.com/dictvoice?audio={HttpUtility.UrlEncode(val.key)}&type={soundName}&le=cn"
+                            );
                         }
                         else
                         {
@@ -120,6 +133,12 @@ namespace TranslateIntoChinese.Core
                     return default;
                 }
                 List<ContainerElement> wordElement = new List<ContainerElement>();
+                // 翻译注释
+                if (Constants.Config.IsRemoteTranslate)
+                {
+                    var remote = await getLegacyQuickInfoSessionAsync(session);
+                    wordElement.AddRange(remote);
+                }
                 // 分割单词
                 var words = ParseString.getWordArray(searchText);
                 if (words != null && words.Count() > 0)
@@ -133,6 +152,16 @@ namespace TranslateIntoChinese.Core
                         }
                         else if(!string.IsNullOrWhiteSpace(item.Trim()))
                         {
+                            if (Constants.Config.IsRemoteTranslate)
+                            {
+                                Dictionarys _tran = new Dictionarys
+                                {
+                                    key = item,
+                                    t = (await TranslateHelper.getTranslateAsync(new List<string> { item }))?[0]
+                                };
+                                wordElement.Add(createElement(_tran));
+                                continue;
+                            }
                             wordElement.Add(createNofoundElement(item));
                         }
                     }
@@ -147,6 +176,69 @@ namespace TranslateIntoChinese.Core
                 await ex.LogAsync();
                 return default;
             }
+        }
+
+        async Task<List<ContainerElement>> getLegacyQuickInfoSessionAsync(IAsyncQuickInfoSession session)
+        {
+            var res = session.Properties.PropertyList[0].Value as IQuickInfoSession;
+
+            // 使用 LINQ 选择并处理 ContainerElement 类型的元素
+            var tasks = res.QuickInfoContent
+                .OfType<ContainerElement>()
+                .Select(async item => await HandleContainerElementAsync(item))
+                .ToList();
+
+            // 等待所有任务完成
+            var results = await Task.WhenAll(tasks);
+
+            // 使用 LINQ 处理结果并生成新的 ContainerElement 列表
+            var containerElements = results
+                .Where(result => result.Count > 1)
+                .Select(async result =>
+                {
+                    var tran = await TranslateHelper.getTranslateAsync(result);
+                    return new ContainerElement(
+                        ContainerElementStyle.Stacked,
+                        tran.Select(tran => new ClassifiedTextElement(new ClassifiedTextRun(PredefinedClassificationTypeNames.String, tran)))
+                            .ToList()
+                    );
+                })
+                .ToList();
+
+            // 等待所有内部任务完成
+            return (await Task.WhenAll(containerElements)).ToList();
+        }
+        async Task<List<string>> HandleContainerElementAsync(ContainerElement container)
+        {
+            var result = new List<string>();
+            if (container.Elements.Count() <= 0)
+            {
+                return null;
+            }
+            foreach (var item in container.Elements)
+            {
+                if (item.GetType() == typeof(ContainerElement))
+                {
+                    var sub_res = await HandleContainerElementAsync((ContainerElement)item);
+                    result.AddRange(sub_res);
+                }
+                else if (item.GetType() == typeof(ClassifiedTextElement))
+                {
+                    result.Add(HandleClassifiedTextElement((ClassifiedTextElement)item));
+                }
+            }
+
+            return result;
+        }
+        string HandleClassifiedTextElement(ClassifiedTextElement element)
+        {
+            StringBuilder temp_res = new StringBuilder();
+            foreach (var sub_item in element.Runs)
+            {
+                temp_res.Append(sub_item.Text);
+            }
+
+            return temp_res.ToString();
         }
     }
 }

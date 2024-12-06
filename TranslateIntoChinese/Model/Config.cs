@@ -1,80 +1,106 @@
-﻿using Microsoft.VisualStudio.Imaging;
-using Microsoft.VisualStudio.Imaging.Interop;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using TranslateIntoChinese.Utility;
+using TranslateIntoChinese.Model.Enums;
 
 namespace TranslateIntoChinese.Model
 {
-    public class Config
+    public class Config : INotifyPropertyChanged
     {
-        // Storage paths
-        public static string StoragePath => SystemHelper.GetMyDocumentPath() + "\\TranslateIntoChinese\\";
-        public static string SettingsPath => StoragePath + "TC_Config.json";
-        public static string AudioPath => StoragePath + "audio";
-
-        // Global configuration instance
-        public static Config GlobalConfig { get; set; } = new Config();
-
-        // Load configuration
-        public static void Load()
+        bool _isDark = false;
+        public bool IsDark
         {
-            try
+            get => _isDark;
+            set
             {
-                Directory.CreateDirectory(StoragePath);
-                Directory.CreateDirectory(AudioPath);
-
-                if (!File.Exists(SettingsPath))
-                    return;
-
-                GlobalConfig = JsonHelper.ReadJson<Config>(SettingsPath);
-
-                if (GlobalConfig.ThemeIsLight)
-                    ColorHelper.LightColor();
+                _isDark = value;
+                //Save();
+                OnPropertyChanged();
             }
-            catch (Exception ex)
+        }
+        bool _translateDescribe = false;
+        public bool TranslateDescribe
+        {
+            get => _translateDescribe;
+            set
             {
-                ex.Log();
+                _translateDescribe = value;
+                //Save();
+                OnPropertyChanged();
+            }
+        }
+        SoundType _sound = SoundType.Default;
+        public SoundType Sound
+        {
+            get => _sound;
+            set
+            {
+                _sound = value;
+                //Save();
+                OnPropertyChanged();
+            }
+        }
+        string _soundName = null;
+        public string SoundName
+        {
+            get=> _soundName;
+            set
+            {
+                _soundName = value;
+                //Save();
+                OnPropertyChanged();
+            }
+        }
+        bool _isRemoteTranslate = false;
+        public bool IsRemoteTranslate
+        {
+            get => _isRemoteTranslate;
+            set
+            {
+                _isRemoteTranslate = value;
+                OnPropertyChanged();
+            }
+        }
+        TranslateType _translateType = TranslateType.Bing;
+        public TranslateType TranslateType
+        {
+            get => _translateType;
+            set
+            {
+                _translateType = value;
+                OnPropertyChanged();
             }
         }
 
-        // Save configuration
-        public static async Task Save()
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
-            try
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+        public static Config Load()
+        {
+            Directory.CreateDirectory(Constants.StoragePath);
+            Directory.CreateDirectory(Constants.AudioPath);
+            if (!File.Exists(Constants.SettingsPath))
             {
-                JsonHelper.WriteJson(GlobalConfig, SettingsPath);
-                var infoBar = await VS.InfoBar.CreateAsync(new InfoBarModel($"Successfully saved to: {SettingsPath}"));
-                await infoBar.TryShowInfoBarUIAsync();
-                await Task.Run(async () =>
-                {
-                    await Task.Delay(3000);
-                    infoBar.Close();
-                });
+                return new Config();
             }
-            catch (Exception ex)
-            {
-                ex.Log();
-            }
+            var settingsJson = File.ReadAllText(Constants.SettingsPath);
+            var settings = JsonSerializer.Deserialize<Config>(settingsJson);
+
+            return settings;
         }
 
-        // Configuration properties
-        public bool ThemeIsLight { get; set; } = false;
-        public bool IsEdgeTTs { get; set; } = false;
-        public string SelectedVoice { get; set; } = string.Empty;
-        /// <summary>
-        /// 声音大小，0-100
-        /// </summary>
-        public long Sound { get; set; } = 100;
-        /// <summary>
-        /// 语速，-10 to 10
-        /// </summary>
-        public long SpeechSpeed { get; set; } = 0;
+        public static void Save()
+        {
+            var settingsJson = JsonSerializer.Serialize(Constants.Config);
+            File.WriteAllText(Constants.SettingsPath, settingsJson);
+        }
     }
-
 }

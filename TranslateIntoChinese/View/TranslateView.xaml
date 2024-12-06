@@ -6,6 +6,8 @@
              xmlns:local="clr-namespace:TranslateIntoChinese.View"
              xmlns:Colors="clr-namespace:TranslateIntoChinese.Utility"
              mc:Ignorable="d" 
+             Width="600"
+             Height="500"
              d:DesignHeight="120" d:DesignWidth="200">
     <Border CornerRadius="10,10,10,10"
             Background="{Binding Source={x:Static Colors:ColorHelper.Background}}">

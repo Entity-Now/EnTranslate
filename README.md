@@ -3,11 +3,17 @@
 ## 简介
 1. 支持划词翻译（鼠标悬浮到单词上方将自动翻译）
 2. 支持播放单词发音
-3. 支持调用百度翻译接口翻译注释文档 （暂未实现）
+3. 支持调用在线接口翻译
 4. 强大的单词拆分能力: 支持驼峰, 下划线形式等各种单词拆分
 5. 丰富的本地词库: 包含 340 万+离线单词, 支持各种生僻单词
+6. 支持翻译文档注释，支持翻译文档注释，支持翻译文档注释（重要的事情说三遍）
+7. 支持使用微软Edge、有道等语言接口播放单词发音
 
-EnTranslate内部实现方法借鉴于vscode插件[Code Translate](https://github.com/w88975/code-translate-vscode) ，感谢w88975作者将其开源。
+EnTranslate内部实现方法部分借鉴于以下仓库 ，感谢各位作者将其开源。
+| 库 |
+| --- |
+| [Code Translate](https://github.com/w88975/code-translate-vscode) |
+| [Multi-Supplier-MT-Plugin](https://github.com/JuchiaLu/Multi-Supplier-MT-Plugin) |
 
 ## 下载
 [vs 官方下载](https://marketplace.visualstudio.com/items?itemName=Entity-Now.Translate);
@@ -15,9 +21,9 @@ EnTranslate内部实现方法借鉴于vscode插件[Code Translate](https://githu
 ## 预览
 
 - 鼠标悬停翻译、自动拆分单词组合
-![黑色主题](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/black.png)
+![黑色主题](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/new_hover.png)
 ![白色主题](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/white.png)
-![设置界面](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/settings.png)
+![设置界面](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/new_setting.png)
 
 ## 支持
 > 如果觉得插件好用，麻烦帮忙点个star。
@@ -26,9 +32,9 @@ EnTranslate内部实现方法借鉴于vscode插件[Code Translate](https://githu
 
 
 ## 计划
-    [x] 支持在线翻译
+    [√] 支持在线翻译
     [x] 将中文文本替换为英文（用于变量取名）
-    [x] 翻译文档注释
+    [√] 翻译文档注释
 
 ## 更新
 
@@ -56,3 +62,8 @@ EnTranslate内部实现方法借鉴于vscode插件[Code Translate](https://githu
     - 支持使用微软Edge语言接口播放单词
     - 修复一些问题
     - ...
+
+6. 2024.12.7
+    - 修复设置报错失效的问题
+    - 当本地词库找不到单词时，可开启在线接口翻译
+    - 支持翻译英文文档注释

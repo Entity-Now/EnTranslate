@@ -50,7 +50,7 @@ namespace TranslateIntoChinese.Utility
                 {
                     // 设置讲述人的声音
                     //synth.SelectVoiceByHints(VoiceGender.NotSet, VoiceAge.NotSet);
-                    var voice = Config.GlobalConfig.SelectedVoice;
+                    var voice = Constants.Config.SoundName;
                     if (!string.IsNullOrEmpty(voice))
                     {
                         synth.SelectVoice(voice);
@@ -60,10 +60,10 @@ namespace TranslateIntoChinese.Utility
                         synth.SetOutputToDefaultAudioDevice();
                     }
                     // 设置音量（0到100）
-                    synth.Volume = (int)Config.GlobalConfig.Sound;
+                    //synth.Volume = (int)Constrant.GlobalConfig.Sound;
 
                     // 设置语速（-10到10）
-                    synth.Rate = (int)Config.GlobalConfig.SpeechSpeed;
+                    //synth.Rate = (int)Constrant.GlobalConfig.SpeechSpeed;
 
                     // 调用Speak方法让讲述人说出文本
                     synth.Speak(text);

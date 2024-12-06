@@ -10,127 +10,116 @@ using System.Windows.Controls;
 using TranslateIntoChinese.Model;
 using TranslateIntoChinese.Utility;
 using Edge_tts_sharp;
+using System.Speech.Synthesis;
+using TranslateIntoChinese.Model.Enums;
 
 namespace TranslateIntoChinese.Core
 {
-    public partial class SettingsToolWindowControl : UserControl, INotifyPropertyChanged
+    public partial class SettingsToolWindowControl : UserControl , INotifyPropertyChanged
     {
-        // Declare the event
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public SettingsToolWindowControl()
         {
             InitializeComponent();
+            LoadSelect(Config.Sound);
             this.DataContext = this;
         }
-        public bool IsLight
-        {
-            get
-            {
-                return Config.GlobalConfig.ThemeIsLight;
-            }
-            set
-            {
-                Config.GlobalConfig.ThemeIsLight = value;
-                OnPropertyChanged();
-            }
-        }
-        public long SoundValue
-        {
-            get
-            {
-                return Config.GlobalConfig.Sound;
-            }
-            set
-            {
-                Config.GlobalConfig.Sound = value;
-                OnPropertyChanged();
-            }
-        }
-        public long SpeechSpeed
-        {
-            get
-            {
-                return Config.GlobalConfig.SpeechSpeed;
-            }
-            set
-            {
-                Config.GlobalConfig.SpeechSpeed = value;
-                OnPropertyChanged();
-            }
-        }
-        public string VoiceSelected
-        {
-            get
-            {
-                return Config.GlobalConfig.SelectedVoice;
-            }
-            set
-            {
-                Config.GlobalConfig.SelectedVoice = value;
-                OnPropertyChanged();
-            }
-        }
-        public bool IsEdgeTTs
-        {
-            get => Config.GlobalConfig.IsEdgeTTs;
-            set
-            {
-                Config.GlobalConfig.IsEdgeTTs = value;
-                _getVoice();
-                OnPropertyChanged();
-            }
-        }
-        public ObservableCollection<string> _voiceList = new ObservableCollection<string>() {  };
+        public Config Config { get => Constants.Config; set { } }
 
-        public ObservableCollection<string> VoiceList
+        public ObservableCollection<SelectOption<TranslateType>> _translateItems = new ObservableCollection<SelectOption<TranslateType>>
         {
-            get { return _voiceList; }
+            new SelectOption<TranslateType>{ Name = "Bing", Value = Model.Enums.TranslateType.Bing },
+            new SelectOption<TranslateType>{ Name = "Google",Value = Model.Enums.TranslateType.Google },
+            new SelectOption<TranslateType>{ Name = "Deep",Value = Model.Enums.TranslateType.Deep },
+            new SelectOption<TranslateType>{ Name = "Yandex",Value = Model.Enums.TranslateType.Yandex },
+        };
+        public ObservableCollection<SelectOption<TranslateType>> TranslateItems
+        {
+            get => _translateItems;
             set
             {
-                _voiceList = value;
-                OnPropertyChanged();
+                _translateItems = value;
+                OnPropertyChanged(nameof(TranslateItems));
+            }
+        }
+        public ObservableCollection<SelectOption<SoundType>> _soundItems = new ObservableCollection<SelectOption<SoundType>>
+        {
+            new SelectOption<SoundType>{ Name = "默认", Value = Model.Enums.SoundType.Default },
+            new SelectOption<SoundType>{ Name = "Edge语音转文字",Value = Model.Enums.SoundType.Edge },
+            new SelectOption<SoundType>{ Name = "有道翻译接口",Value = Model.Enums.SoundType.YouDao }
+        };
+        public ObservableCollection<SelectOption<SoundType>> SoundItems
+        {
+            get => _soundItems;
+            set
+            {
+                _soundItems = value;
+                OnPropertyChanged(nameof(SoundItems));
+            }
+        }
+        ObservableCollection<string> soundList = new ObservableCollection<string>();
+        public ObservableCollection<string> SoundList
+        {
+            get => soundList;
+            set
+            {
+                soundList = value;
+                OnPropertyChanged(nameof(SoundList));
             }
         }
 
-        // Create the OnPropertyChanged method to raise the event
-        // The calling member's name will be used as the parameter.
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
+
 
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
-            await Config.Save();
+            Config.Save();
             await VS.StatusBar.ShowMessageAsync("保存成功！");
         }
-       void _getVoice()
+
+
+        private void sound_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            VoiceList.Clear();
-            List<string> voiceList;
-            if (IsEdgeTTs)
-            {
-                voiceList = Edge_tts_sharp.Edge_tts.GetVoice().Select(i => i.Name).ToList();
-            }
-            else
-            {
-                voiceList = SystemHelper.GetInstallVoice().Select(I => I.VoiceInfo.Name).ToList();
-            }
-            foreach (var item in voiceList)
-            {
-                VoiceList.Add(item);
-            }
-        }
-        private void Grid_Loaded(object sender, RoutedEventArgs e)
-        {
-            _getVoice();
+            var combobox = (sender as ComboBox);
+            Config.Sound = (SoundType)combobox.SelectedValue;
+
+            LoadSelect(Config.Sound);
         }
 
-        private void Grid_Unloaded(object sender, RoutedEventArgs e)
+        void LoadSelect(SoundType soundType)
         {
-            //IsLoad = false;
-            //VoiceList.Clear();
+            SoundList.Clear();
+            if (soundType == SoundItems[0].Value)
+            {
+                using (var synth = new SpeechSynthesizer())
+                {
+                    foreach (var item in synth.GetInstalledVoices())
+                    {
+                        SoundList.Add(item.VoiceInfo.Name);
+                    }
+                }
+            }
+            else if (soundType == SoundItems[1].Value)
+            {
+                foreach (var item in Edge_tts.GetVoice())
+                {
+                    SoundList.Add(item.Name);
+                }
+            }
+            else if (soundType == SoundItems[2].Value)
+            {
+                SoundList.Add("1");
+                SoundList.Add("2");
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = this.PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

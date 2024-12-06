@@ -3,7 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:colors="clr-namespace:TranslateIntoChinese.Utility"
+             xmlns:model="clr-namespace:TranslateIntoChinese.Model"
+             xmlns:model_enum="clr-namespace:TranslateIntoChinese.Model.Enums"
              xmlns:view="clr-namespace:TranslateIntoChinese.View"
              Background="{Binding Source={x:Static colors:ColorHelper.Background}}"
              MinWidth="350"
@@ -11,7 +14,18 @@
              d:DesignHeight="300"
              d:DesignWidth="500"
              Name="MyToolWindow">
-    <Grid Loaded="Grid_Loaded" Unloaded="Grid_Unloaded">
+    <UserControl.Resources>
+        <ObjectDataProvider
+            x:Key="DataFromEnum"
+            MethodName="GetValues"
+            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="model_enum:SoundType">
+                </x:Type>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="50"/>
@@ -19,57 +33,63 @@
         <StackPanel Orientation="Vertical">
             <view:CellControl VerticalContentAlignment="Stretch">
                 <view:CellControl.O_Title>
-                    白色主题
+                    暗色主题
                 </view:CellControl.O_Title>
                 <view:CellControl.O_Content>
-                    设置界面切换到白色的主题（显示翻译内容的主题是跟随vs编辑器主题变化的）
+                    设置界面切换到暗色的主题（显示翻译内容的主题是跟随vs编辑器主题变化的）
                 </view:CellControl.O_Content>
                 <view:CellControl.O_Handle>
-                    <CheckBox IsChecked="{Binding IsLight}"/>
+                    <CheckBox IsChecked="{Binding Config.IsDark, Mode=TwoWay}"/>
                 </view:CellControl.O_Handle>
             </view:CellControl>
             <view:CellControl VerticalContentAlignment="Stretch">
                 <view:CellControl.O_Title>
-                    Edge 语音接口
+                    远程翻译
                 </view:CellControl.O_Title>
                 <view:CellControl.O_Content>
-                    使用微软Edge语言包，声音更加自然(需要联网，可能会有延迟)
+                    开启后本地词库找不到的单词，将在线翻译。
                 </view:CellControl.O_Content>
                 <view:CellControl.O_Handle>
-                    <CheckBox IsChecked="{Binding IsEdgeTTs}"/>
+                    <CheckBox IsChecked="{Binding Config.IsRemoteTranslate, Mode=TwoWay}"/>
                 </view:CellControl.O_Handle>
             </view:CellControl>
             <view:CellControl VerticalContentAlignment="Stretch">
                 <view:CellControl.O_Title>
-                    声音
+                    在线翻译平台
                 </view:CellControl.O_Title>
                 <view:CellControl.O_Content>
-                    选择播放单词时使用的语言包
+                    根据自己的喜好选择翻译平台
                 </view:CellControl.O_Content>
                 <view:CellControl.O_Handle>
-                    <ComboBox Width="163" ItemsSource="{Binding VoiceList}" SelectedItem="{Binding VoiceSelected}"/>
+                    <ComboBox SelectedValue="{Binding Config.TranslateType, Mode=TwoWay}"
+                              ItemsSource="{Binding TranslateItems}" DisplayMemberPath="Name" SelectedValuePath="Value"/>
                 </view:CellControl.O_Handle>
             </view:CellControl>
             <view:CellControl VerticalContentAlignment="Stretch">
                 <view:CellControl.O_Title>
-                    讲话速度
+                    音源
                 </view:CellControl.O_Title>
                 <view:CellControl.O_Content>
-                    播放单词的时候的语速
+                    可以选择自己喜欢的音源播放单词
                 </view:CellControl.O_Content>
                 <view:CellControl.O_Handle>
-                    <Slider Minimum="-10" Maximum="10" Width="165" Value="{Binding SpeechSpeed}"/>
+                    <ComboBox SelectedValue="{Binding Config.Sound, Mode=TwoWay}"
+                              ItemsSource="{Binding SoundItems}" DisplayMemberPath="Name" SelectedValuePath="Value" SelectionChanged="sound_SelectionChanged"/>
                 </view:CellControl.O_Handle>
             </view:CellControl>
-            <view:CellControl VerticalContentAlignment="Stretch" O_Title="音量" O_Content="播放单词的时候的音量大小">
+            <view:CellControl VerticalContentAlignment="Stretch">
+                <view:CellControl.O_Title>
+                    音源名称
+                </view:CellControl.O_Title>
+                <view:CellControl.O_Content>
+                    （必选）具体的音源名称
+                </view:CellControl.O_Content>
                 <view:CellControl.O_Handle>
-                    <Slider Minimum="0" Maximum="100" Width="165" Value="{Binding SoundValue}"/>
+                    <ComboBox SelectedItem="{Binding Config.SoundName, Mode=TwoWay}" ItemsSource="{Binding SoundList}"/>
                 </view:CellControl.O_Handle>
             </view:CellControl>
         </StackPanel>
         <Button Grid.Row="1" Content="保存配置" 
-                Background="{Binding Source={x:Static colors:ColorHelper.Second}}"
-                Foreground="{Binding Source={x:Static colors:ColorHelper.Text}}"
                 Click="Save_Click"/>
     </Grid>
 </UserControl>

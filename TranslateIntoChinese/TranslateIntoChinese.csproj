@@ -64,6 +64,10 @@
       <DependentUpon>SettingsToolWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Config.cs" />
+    <Compile Include="Model\Constants.cs" />
+    <Compile Include="Model\Enums\SoundType.cs" />
+    <Compile Include="Model\Enums\TranslateType.cs" />
+    <Compile Include="Model\SelectOption.cs" />
     <Compile Include="ProjectInfo.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -79,6 +83,7 @@
     <Compile Include="Utility\ColorHelper.cs" />
     <Compile Include="Utility\JsonHelper.cs" />
     <Compile Include="Utility\SystemHelper.cs" />
+    <Compile Include="Utility\TranslateHelper.cs" />
     <Compile Include="View\CellControl.xaml.cs">
       <DependentUpon>CellControl.xaml</DependentUpon>
     </Compile>
@@ -124,6 +129,7 @@
     <Reference Include="System.Design" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Speech" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
@@ -132,7 +138,7 @@
     <PackageReference Include="Community.VisualStudio.VSCT" Version="16.0.29.6" PrivateAssets="all" />
     <PackageReference Include="Community.VisualStudio.Toolkit.17" Version="17.0.430" ExcludeAssets="Runtime" />
     <PackageReference Include="Edge_tts_sharp">
-      <Version>1.0.4</Version>
+      <Version>1.1.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232" />
     <PackageReference Include="System.Speech">
