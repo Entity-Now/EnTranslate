@@ -21,9 +21,9 @@ EnTranslate内部实现方法部分借鉴于以下仓库 ，感谢各位作者�
 ## 预览
 
 - 鼠标悬停翻译、自动拆分单词组合
-![黑色主题](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/new_hover.png)
+![黑色主题](/docs/new_hover.png)
 ![白色主题](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/white.png)
-![设置界面](https://cdn.jsdelivr.net/gh/Entity-Now/EnTranslate/docs/new_setting.png)
+![设置界面](/docs/new_setting.png)
 
 ## 支持
 > 如果觉得插件好用，麻烦帮忙点个star。
