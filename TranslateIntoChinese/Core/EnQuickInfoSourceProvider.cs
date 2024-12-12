@@ -9,7 +9,7 @@ namespace TranslateIntoChinese.Core
     [Export(typeof(IAsyncQuickInfoSourceProvider))]
     [Name("ToolTip QuickInfo Source")]
     [Order(Before = "Default Quick Info Presenter")]
-    [ContentType("csharp"), ContentType("C/C++"), ContentType("css"), ContentType("F#"), ContentType("JScript"), ContentType("JS"), ContentType("JavaScript"), ContentType("Json"), ContentType("txt"), ContentType("html"), ContentType("cshtml")]
+    [ContentType("csharp"), ContentType("C/C++"), ContentType("css"), ContentType("F#"), ContentType("JScript"), ContentType("JS"), ContentType("JavaScript"), ContentType("Json"), ContentType("text"), ContentType("html"), ContentType("cshtml")]
     internal class EnQuickInfoSourceProvider : IAsyncQuickInfoSourceProvider
     {
         [Import]
