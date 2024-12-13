@@ -86,7 +86,15 @@ namespace EnTranslate.NetworkTranslates
             httpClient.DefaultRequestHeaders.Add("x-app-version", "2.9.1");
             httpClient.DefaultRequestHeaders.Add("Connection", "keep-alive");
         }
-        public override async Task<List<string>> Translate(List<string> texts, string fromLan, string toLan)
+        public override Task<string> GetToken()
+        {
+            return Task.FromResult(string.Empty);
+        }
+        public override Task<string> Detect(string text, string token = null)
+        {
+            throw new NotImplementedException();
+        }
+        public override async Task<List<string>> Translate(List<string> texts, string fromLan, string toLan, string token = null)
         {
             List<string> result = new List<string>();
 

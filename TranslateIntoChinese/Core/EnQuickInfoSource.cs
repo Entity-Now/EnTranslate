@@ -157,7 +157,7 @@ namespace TranslateIntoChinese.Core
                                 Dictionarys _tran = new Dictionarys
                                 {
                                     key = item,
-                                    t = (await TranslateHelper.getTranslateAsync(new List<string> { item }))?[0]
+                                    t = (await TranslateHelper.getTranslateAsync(Constants.Config.TranslateType, new List<string> { item }))?[0]
                                 };
                                 wordElement.Add(createElement(_tran));
                                 continue;
@@ -196,7 +196,7 @@ namespace TranslateIntoChinese.Core
                 .Where(result => result.Count > 1)
                 .Select(async result =>
                 {
-                    var tran = await TranslateHelper.getTranslateAsync(result);
+                    var tran = await TranslateHelper.getTranslateAsync(Constants.Config.TranslateType, result);
                     return new ContainerElement(
                         ContainerElementStyle.Stacked,
                         tran.Select(tran => new ClassifiedTextElement(new ClassifiedTextRun(PredefinedClassificationTypeNames.String, tran)))

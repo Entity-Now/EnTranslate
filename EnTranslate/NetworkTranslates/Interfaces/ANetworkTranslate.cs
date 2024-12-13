@@ -8,7 +8,9 @@ namespace EnTranslate.NetworkTranslates.Interfaces
 {
     public abstract class ANetworkTranslate
     {
-        public abstract Task<List<string>> Translate(List<string> texts, string fromLan, string toLan);
+        public abstract Task<string> GetToken(); 
+        public abstract Task<List<string>> Translate(List<string> texts, string fromLan, string toLan, string token = null);
+        public abstract Task<string> Detect(string text, string token = null);
 
 
         public string ArrayToString(List<string> @this)

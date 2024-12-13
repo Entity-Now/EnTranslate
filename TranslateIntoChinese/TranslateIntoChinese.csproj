@@ -66,7 +66,6 @@
     <Compile Include="Model\Config.cs" />
     <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\Enums\SoundType.cs" />
-    <Compile Include="Model\Enums\TranslateType.cs" />
     <Compile Include="Model\SelectOption.cs" />
     <Compile Include="ProjectInfo.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -83,7 +82,6 @@
     <Compile Include="Utility\ColorHelper.cs" />
     <Compile Include="Utility\JsonHelper.cs" />
     <Compile Include="Utility\SystemHelper.cs" />
-    <Compile Include="Utility\TranslateHelper.cs" />
     <Compile Include="View\CellControl.xaml.cs">
       <DependentUpon>CellControl.xaml</DependentUpon>
     </Compile>

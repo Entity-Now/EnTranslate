@@ -3,6 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Platforms>AnyCPU;x64;x86</Platforms>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>MoqDictionary</Title>
+    <Authors>Entity-now</Authors>
+    <PackageProjectUrl>https://github.com/Entity-Now/MoqDictionary</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Entity-Now/MoqDictionary</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Copyright>一个c#字典，其中包含350万+离线单词，并且支持调用多种在线平台的接口.</Copyright>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

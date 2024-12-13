@@ -12,6 +12,7 @@ using TranslateIntoChinese.Utility;
 using Edge_tts_sharp;
 using System.Speech.Synthesis;
 using TranslateIntoChinese.Model.Enums;
+using EnTranslate.Model.Enum;
 
 namespace TranslateIntoChinese.Core
 {
@@ -28,10 +29,10 @@ namespace TranslateIntoChinese.Core
 
         public ObservableCollection<SelectOption<TranslateType>> _translateItems = new ObservableCollection<SelectOption<TranslateType>>
         {
-            new SelectOption<TranslateType>{ Name = "Bing", Value = Model.Enums.TranslateType.Bing },
-            new SelectOption<TranslateType>{ Name = "Google",Value = Model.Enums.TranslateType.Google },
-            new SelectOption<TranslateType>{ Name = "Deep",Value = Model.Enums.TranslateType.Deep },
-            new SelectOption<TranslateType>{ Name = "Yandex",Value = Model.Enums.TranslateType.Yandex },
+            new SelectOption<TranslateType>{ Name = "Bing", Value = TranslateType.Bing },
+            new SelectOption<TranslateType>{ Name = "Google",Value = TranslateType.Google },
+            new SelectOption<TranslateType>{ Name = "Deep",Value = TranslateType.Deep },
+            new SelectOption<TranslateType>{ Name = "Yandex",Value = TranslateType.Yandex },
         };
         public ObservableCollection<SelectOption<TranslateType>> TranslateItems
         {

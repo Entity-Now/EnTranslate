@@ -11,7 +11,7 @@ namespace EnTranslate.utility
     {
         const char SplitValue = '_';
         /// <summary>
-        /// 拆分字符串
+        /// 拆分字符串（适用于编程中）
         /// 例: foor-bar 拆分为 [foo, bar]
         /// </summary>
         /// <param name="character"></param>
@@ -32,11 +32,37 @@ namespace EnTranslate.utility
             // 使用分隔符分割单词
             var new_words = new Regex(@"(?=[A-Z\-_\s])")
                 .Split(character)
+                .Where(i => !string.IsNullOrEmpty(i))
                 .Select(i => MatchLetter(i));
             // 判断是否单词中包含特殊字符导致无法匹配，例如：数字等
             if (new_words.Count() <= 0)
             {
                 Words.Add(MatchLetter(character));
+            }
+
+            return Words.Concat(new_words).Distinct();
+        }
+        /// <summary>
+        /// 主要用于分割英文句子
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static IEnumerable<string> getWordAtText(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text) || text.Length < 2)
+            {
+                return null;
+            }
+            List<string> Words = new List<string>();
+            // 使用空格和标点符号分割句子
+            var new_words = new Regex(@"\W+")
+                .Split(text)
+                .Where(i => !string.IsNullOrEmpty(i))
+                .Select(i => MatchLetter(i));
+            // 判断是否句子中包含特殊字符导致无法匹配，例如：数字等
+            if (new_words.Count() <= 0)
+            {
+                Words.Add(MatchLetter(text));
             }
 
             return Words.Concat(new_words).Distinct();

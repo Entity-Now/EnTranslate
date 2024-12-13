@@ -8,6 +8,8 @@ using System.Text;
 using System.Transactions;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
+using System.Linq;
+using System.Threading;
 
 namespace EnTranslate.NetworkTranslates
 {
@@ -19,6 +21,7 @@ namespace EnTranslate.NetworkTranslates
         private static readonly string tokenUrl = "https://edge.microsoft.com/translate/auth";
 
         private static readonly string baseUrl = "https://api-edge.cognitive.microsofttranslator.com/translate";
+        private static readonly string defectUrl = "https://api-edge.cognitive.microsofttranslator.com/detect";
 
         private static readonly Dictionary<string, string> supportLanguages = new Dictionary<string, string>
         {
@@ -67,7 +70,18 @@ namespace EnTranslate.NetworkTranslates
             public List<int> SrcSentLen { get; set; }
             public List<int> TransSentLen { get; set; }
         }
-   
+        private class LanguageInfo
+        {
+            [JsonProperty("isTranslationSupported")]
+            public bool IsTranslationSupported { get; set; }
+
+            [JsonProperty("isTransliterationSupported")]
+            public bool IsTransliterationSupported { get; set; }
+
+            [JsonProperty("language")] public string Language { get; set; } = "";
+
+            [JsonProperty("score")] public double Score { get; set; }
+        }
         static EdgeTranslate()
         {
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
@@ -84,11 +98,45 @@ namespace EnTranslate.NetworkTranslates
             httpClient.DefaultRequestHeaders.Add("Referrer-Policy", "strict-origin-when-cross-origin");
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42");
         }
-        public override async Task<List<string>> Translate(List<string> texts, string fromLan, string toLan)
+
+        public override async Task<string> GetToken()
         {
             HttpResponseMessage tokenResponse = await httpClient.GetAsync(tokenUrl);
             tokenResponse.EnsureSuccessStatusCode();
             string token = await tokenResponse.Content.ReadAsStringAsync();
+
+            return token;
+        }
+
+        public override async Task<string> Detect(string text, string token = null)
+        {
+            if (string.IsNullOrEmpty(token)) 
+            {
+                token = await GetToken();
+            }
+            var data = new[] { new { Text = text } };
+
+            var req = JsonConvert.SerializeObject(data);
+
+            HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Get, defectUrl + "?api-version=3.0");
+            requestMessage.Headers.Add("Authorization", "Bearer "+ token);
+            requestMessage.Content = new StringContent(req, Encoding.UTF8, "application/json");
+
+            var httpRes = await httpClient.SendAsync(requestMessage);
+            httpRes.EnsureSuccessStatusCode();
+
+            string jsonRes = await httpRes.Content.ReadAsStringAsync();
+            var objectRes = JsonConvert.DeserializeObject<List<LanguageInfo>>(jsonRes);
+
+            return objectRes.First().Language;
+        }
+
+        public override async Task<List<string>> Translate(List<string> texts, string fromLan, string toLan, string token = null)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                token = await GetToken();
+            }
 
             string url = baseUrl + $"?from={supportLanguages[fromLan]}&to={supportLanguages[toLan]}&apiVersion=3.0&includeSentenceLength=true";
             HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, url);
