@@ -10,7 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EnTranslate\EnTranslate.csproj" />
   </ItemGroup>
 
 </Project>

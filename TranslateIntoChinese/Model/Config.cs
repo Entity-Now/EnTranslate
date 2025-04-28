@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MoqDictionary.Model.Enum;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;

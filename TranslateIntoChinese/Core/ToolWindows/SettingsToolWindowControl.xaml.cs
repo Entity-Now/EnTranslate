@@ -12,7 +12,7 @@ using TranslateIntoChinese.Utility;
 using Edge_tts_sharp;
 using System.Speech.Synthesis;
 using TranslateIntoChinese.Model.Enums;
-using EnTranslate.Model.Enum;
+using MoqDictionary.Model.Enum;
 
 namespace TranslateIntoChinese.Core
 {

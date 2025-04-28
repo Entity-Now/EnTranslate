@@ -139,6 +139,9 @@
       <Version>1.1.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.0.5232" />
+    <PackageReference Include="MoqDictionary">
+      <Version>1.0.2</Version>
+    </PackageReference>
     <PackageReference Include="System.Speech">
       <Version>8.0.0-rc.1.23419.4</Version>
     </PackageReference>
@@ -165,12 +168,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EnTranslate\EnTranslate.csproj">
-      <Project>{4d0498b7-fc49-4e0a-acca-161e3dc1c040}</Project>
-      <Name>EnTranslate</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />

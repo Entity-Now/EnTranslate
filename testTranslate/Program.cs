@@ -1,4 +1,4 @@
-﻿using EnTranslate.utility;
+﻿using MoqDictionary.utility;
 using System.Text.RegularExpressions;
 
 namespace testTranslate
