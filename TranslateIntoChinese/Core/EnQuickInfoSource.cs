@@ -36,7 +36,7 @@ namespace TranslateIntoChinese.Core
     {
         private readonly EnQuickInfoSourceProvider _provider;
         private readonly ITextBuffer _textBuffer;
-        public EnQuickInfoSource(EnQuickInfoSourceProvider provider, ITextBuffer textBuffer) 
+        public EnQuickInfoSource(EnQuickInfoSourceProvider provider, ITextBuffer textBuffer)
         {
             _provider = provider;
             _textBuffer = textBuffer;
@@ -68,12 +68,13 @@ namespace TranslateIntoChinese.Core
                                 return;
                             }
                             var voice = Edge_tts.GetVoice().FirstOrDefault(i => string.IsNullOrEmpty(soundName) ? i.Name.Contains("zh-CN") : i.Name == soundName);
-                            Edge_tts.PlayText(new PlayOption { 
+                            Edge_tts.PlayText(new PlayOption
+                            {
                                 Text = val.key,
                                 SavePath = audioPath,
                             }, voice);
                         }
-                        else if(Constants.Config.Sound == Model.Enums.SoundType.YouDao)
+                        else if (Constants.Config.Sound == Model.Enums.SoundType.YouDao)
                         {
                             Audio.PlayAudioFromUrlAsync
                             (
@@ -87,7 +88,7 @@ namespace TranslateIntoChinese.Core
                     }),
                     new ClassifiedTextElement(Word, split, Dimension)
                 ),
-                new ClassifiedTextElement(new ClassifiedTextRun(PredefinedClassificationTypeNames.NaturalLanguage, val.t.Replace(@"\n","\n")))
+                new ClassifiedTextElement(new ClassifiedTextRun(PredefinedClassificationTypeNames.NaturalLanguage, val.t.Replace(@"\n", "\n")))
             );
         }
         private ContainerElement createNofoundElement(string Word)
@@ -150,7 +151,7 @@ namespace TranslateIntoChinese.Core
                         {
                             wordElement.Add(createElement(TranslateVal));
                         }
-                        else if(!string.IsNullOrWhiteSpace(item.Trim()))
+                        else if (!string.IsNullOrWhiteSpace(item.Trim()))
                         {
                             if (Constants.Config.IsRemoteTranslate)
                             {
@@ -166,8 +167,8 @@ namespace TranslateIntoChinese.Core
                         }
                     }
                 }
-                var translateContainer = new ContainerElement(ContainerElementStyle.Stacked ,wordElement);
-                
+                var translateContainer = new ContainerElement(ContainerElementStyle.Stacked, wordElement);
+
                 var result = new QuickInfoItem(applicableToSpan, translateContainer);
                 return result;
             }
@@ -180,8 +181,19 @@ namespace TranslateIntoChinese.Core
 
         async Task<List<ContainerElement>> getLegacyQuickInfoSessionAsync(IAsyncQuickInfoSession session)
         {
-            var res = session.Properties.PropertyList[0].Value as IQuickInfoSession;
+            if (session.Properties.PropertyList.Count <= 0)
+            {
+                return new List<ContainerElement>();
+            }
 
+            var res = session.Properties.PropertyList
+                .Select(it => it.Value)
+                .OfType<IQuickInfoSession>()
+                .FirstOrDefault();
+            if (res == null || res.QuickInfoContent == null)
+            {
+                return new List<ContainerElement>();
+            }
             // 使用 LINQ 选择并处理 ContainerElement 类型的元素
             var tasks = res.QuickInfoContent
                 .OfType<ContainerElement>()
