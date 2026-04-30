@@ -10,13 +10,13 @@ namespace TranslateIntoChinese.Core
     [Name("ToolTip QuickInfo Source")]
     [Order(Before = "Default Quick Info Presenter")]
     [ContentType("csharp"), ContentType("C/C++"), ContentType("css"), ContentType("F#"), ContentType("JScript"), ContentType("JS"), ContentType("JavaScript"), ContentType("Json"), ContentType("text"), ContentType("html"), ContentType("cshtml")]
-    internal class EnQuickInfoSourceProvider : IAsyncQuickInfoSourceProvider
+    public class EnQuickInfoSourceProvider : IAsyncQuickInfoSourceProvider
     {
         [Import]
-        internal ITextStructureNavigatorSelectorService NavigatorService { get; set; }
+        public ITextStructureNavigatorSelectorService NavigatorService { get; set; }
 
         [Import]
-        internal ITextBufferFactoryService TextBufferFactoryService { get; set; }
+        public ITextBufferFactoryService TextBufferFactoryService { get; set; }
 
         public IAsyncQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
         {

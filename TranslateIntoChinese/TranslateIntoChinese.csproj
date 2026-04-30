@@ -57,12 +57,16 @@
     <Compile Include="Core\Commands\ShowSettingsCommand.cs" />
     <Compile Include="Core\EnQuickInfoSource.cs" />
     <Compile Include="Core\EnQuickInfoSourceProvider.cs" />
+    <Compile Include="Core\LegacyInfoService.cs" />
+    <Compile Include="Core\QuickInfoTextExtractor.cs" />
+    <Compile Include="Core\QuickInfoUIBuilder.cs" />
     <Compile Include="Core\RegisterMenuCommand.cs" />
     <Compile Include="Core\TextViewCreationListener.cs" />
     <Compile Include="Core\ToolWindows\SettingsToolWindow.cs" />
     <Compile Include="Core\ToolWindows\SettingsToolWindowControl.xaml.cs">
       <DependentUpon>SettingsToolWindowControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\VoiceService.cs" />
     <Compile Include="Model\Config.cs" />
     <Compile Include="Model\Constants.cs" />
     <Compile Include="Model\Enums\SoundType.cs" />
