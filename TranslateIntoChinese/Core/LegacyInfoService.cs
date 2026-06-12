@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Language.StandardClassification;
 using System.Collections.Generic;
@@ -15,56 +15,79 @@ namespace TranslateIntoChinese.Core
     {
         public async Task<List<ContainerElement>> GetLegacyTranslationsAsync(IAsyncQuickInfoSession session)
         {
-            // 查找现有的 QuickInfoSession 实例
-            var legacySession = session.Properties.PropertyList
-                .Select(it => it.Value)
-                .OfType<IQuickInfoSession>()
-                .FirstOrDefault();
-
-            if (legacySession == null || legacySession.QuickInfoContent == null)
-                return new List<ContainerElement>();
-
-            var containerList = new List<ContainerElement>();
-
-            // 提取所有文本内容
-            foreach (var content in legacySession.QuickInfoContent.OfType<ContainerElement>())
+            try
             {
-                var stringsToTranslate = await HandleContainerElementAsync(content);
-                // 过滤掉空字符串和纯数字
-                var filteredStrings = stringsToTranslate
-                    .Where(s => !string.IsNullOrWhiteSpace(s) && Regex.IsMatch(s, "[a-zA-Z]"))
-                    .Distinct()
-                    .ToList();
+                if (session?.Properties?.PropertyList == null)
+                    return new List<ContainerElement>();
 
-                if (filteredStrings.Count > 0)
+                // 查找现有的 QuickInfoSession 实例
+                var legacySession = session.Properties.PropertyList
+                    .Select(it => it.Value)
+                    .OfType<IQuickInfoSession>()
+                    .FirstOrDefault();
+
+                if (legacySession == null || legacySession.QuickInfoContent == null)
+                    return new List<ContainerElement>();
+
+                var containerList = new List<ContainerElement>();
+
+                // 提取所有文本内容
+                foreach (var content in legacySession.QuickInfoContent.OfType<ContainerElement>())
                 {
-                    var translations = await TranslateHelper.getTranslateAsync(Constants.Config.TranslateType, filteredStrings);
-                    if (translations != null && translations.Count > 0)
-                    {
-                        var textRuns = translations.Select(t => new ClassifiedTextElement(
-                            new ClassifiedTextRun(PredefinedClassificationTypeNames.String, $" [译] {t}")));
+                    var stringsToTranslate = await HandleContainerElementAsync(content);
+                    // 过滤掉空字符串和纯数字
+                    var filteredStrings = stringsToTranslate
+                        .Where(s => !string.IsNullOrWhiteSpace(s) && Regex.IsMatch(s, "[a-zA-Z]"))
+                        .Distinct()
+                        .ToList();
 
-                        containerList.Add(new ContainerElement(ContainerElementStyle.Stacked, textRuns));
+                    if (filteredStrings.Count > 0)
+                    {
+                        var translations = await TranslateHelper.getTranslateAsync(Constants.Config.TranslateType, filteredStrings);
+                        if (translations != null && translations.Count > 0)
+                        {
+                            var textRuns = translations.Select(t => new ClassifiedTextElement(
+                                new ClassifiedTextRun(PredefinedClassificationTypeNames.String, $" [译] {t}")));
+
+                            containerList.Add(new ContainerElement(ContainerElementStyle.Stacked, textRuns));
+                        }
                     }
                 }
+                return containerList;
             }
-            return containerList;
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"GetLegacyTranslationsAsync failed: {ex.Message}");
+                return new List<ContainerElement>();
+            }
         }
 
         private async Task<List<string>> HandleContainerElementAsync(ContainerElement container)
         {
             var result = new List<string>();
-            foreach (var item in container.Elements)
+            if (container?.Elements == null) return result;
+
+            try
             {
-                if (item is ContainerElement sub)
+                foreach (var item in container.Elements)
                 {
-                    result.AddRange(await HandleContainerElementAsync(sub));
+                    if (item is ContainerElement sub)
+                    {
+                        result.AddRange(await HandleContainerElementAsync(sub));
+                    }
+                    else if (item is ClassifiedTextElement text)
+                    {
+                        if (text.Runs != null)
+                        {
+                            var combinedText = string.Join("", text.Runs.Where(r => r?.Text != null).Select(r => r.Text));
+                            if (!string.IsNullOrWhiteSpace(combinedText)) result.Add(combinedText);
+                        }
+                    }
                 }
-                else if (item is ClassifiedTextElement text)
-                {
-                    var combinedText = string.Join("", text.Runs.Select(r => r.Text));
-                    if (!string.IsNullOrWhiteSpace(combinedText)) result.Add(combinedText);
-                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"HandleContainerElementAsync failed: {ex.Message}");
             }
             return result;
         }

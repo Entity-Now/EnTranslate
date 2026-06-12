@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -91,12 +91,20 @@ namespace TranslateIntoChinese.Core
             SoundList.Clear();
             if (soundType == SoundItems[0].Value)
             {
-                using (var synth = new SpeechSynthesizer())
+                try
                 {
-                    foreach (var item in synth.GetInstalledVoices())
+                    using (var synth = new SpeechSynthesizer())
                     {
-                        SoundList.Add(item.VoiceInfo.Name);
+                        foreach (var item in synth.GetInstalledVoices())
+                        {
+                            SoundList.Add(item.VoiceInfo.Name);
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    ex.Log();
+                    SoundList.Add("未检测到语音引擎/语音包");
                 }
             }
             else if (soundType == SoundItems[1].Value)

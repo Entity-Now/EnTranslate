@@ -1,0 +1,42 @@
+name: Build and Release VSIX
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Set up NuGet
+        uses: nuget/setup-nuget@v2
+
+      - name: Restore NuGet Packages
+        run: nuget restore EnTranslate.sln
+
+      - name: Build VSIX (Release)
+        run: msbuild EnTranslate.sln /p:Configuration=Release /p:DeployExtension=false
+
+      - name: Locate VSIX Package
+        id: locate-vsix
+        shell: pwsh
+        run: |
+          $vsixPath = Resolve-Path "./TranslateIntoChinese/bin/Release/*.vsix" | Select-Object -ExpandProperty Path
+          echo "VSIX_PATH=$vsixPath"
+          echo "VSIX_PATH=$vsixPath" >> $env:GITHUB_ENV
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.VSIX_PATH }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

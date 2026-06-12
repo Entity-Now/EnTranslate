@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -43,10 +43,10 @@ namespace TranslateIntoChinese.Utility
         }
         public static void PlayVoice(string text)
         {
-            // 创建SpeechSynthesizer对象
-            using (SpeechSynthesizer synth = new SpeechSynthesizer())
+            try
             {
-                try
+                // 创建SpeechSynthesizer对象
+                using (SpeechSynthesizer synth = new SpeechSynthesizer())
                 {
                     // 设置讲述人的声音
                     //synth.SelectVoiceByHints(VoiceGender.NotSet, VoiceAge.NotSet);
@@ -68,27 +68,27 @@ namespace TranslateIntoChinese.Utility
                     // 调用Speak方法让讲述人说出文本
                     synth.Speak(text);
                 }
-                catch (Exception ex)
-                {
-                    ex.Log();
-                }
+            }
+            catch (Exception ex)
+            {
+                ex.Log();
             }
         }
         public static ReadOnlyCollection<InstalledVoice> GetInstallVoice()
         {
-            // 创建SpeechSynthesizer对象
-            using (SpeechSynthesizer synth = new SpeechSynthesizer())
+            try
             {
-                try
+                // 创建SpeechSynthesizer对象
+                using (SpeechSynthesizer synth = new SpeechSynthesizer())
                 {
                     // 获取所有可用的语音
                     return synth.GetInstalledVoices();
                 }
-                catch (Exception ex)
-                {
-                    ex.Log();
-                    return null;
-                }
+            }
+            catch (Exception ex)
+            {
+                ex.Log();
+                return null;
             }
         }
     }

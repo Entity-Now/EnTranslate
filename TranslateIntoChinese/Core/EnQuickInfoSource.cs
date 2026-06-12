@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -55,7 +55,6 @@ namespace TranslateIntoChinese.Core
         public async Task<QuickInfoItem> GetQuickInfoItemAsync(IAsyncQuickInfoSession session, CancellationToken cancellationToken)
         {
             if (session.Properties.ContainsProperty("MyTranslatePluginProcessed")) return null;
-            session.Properties.AddProperty("MyTranslatePluginProcessed", true);
 
             try
             {
@@ -78,11 +77,22 @@ namespace TranslateIntoChinese.Core
 
                 if (!wordElements.Any()) return default;
 
+                // 只有成功产生翻译项时才标记已处理，防止空缓冲率先抢占标识导致主缓冲区无法翻译
+                if (session.Properties.ContainsProperty("MyTranslatePluginProcessed")) return null;
+                session.Properties.AddProperty("MyTranslatePluginProcessed", true);
+
                 return new QuickInfoItem(target.ApplicableSpan, new ContainerElement(ContainerElementStyle.Stacked, wordElements));
             }
             catch (Exception ex)
             {
-                await ex.LogAsync();
+                try
+                {
+                    await ex.LogAsync();
+                }
+                catch
+                {
+                    // 忽略日志记录本身的异常，防止二次异常导致 VS 崩溃
+                }
                 return default;
             }
         }
