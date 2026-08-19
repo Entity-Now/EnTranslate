@@ -20,6 +20,8 @@ namespace TranslateIntoChinese
         {
             await this.RegisterCommandsAsync();
             this.RegisterToolWindows();
+            await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            await Core.HotkeyService.ApplyAsync();
         }
     }
 }

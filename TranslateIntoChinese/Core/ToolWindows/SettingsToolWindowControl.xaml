@@ -9,14 +9,15 @@
              xmlns:model_enum="clr-namespace:TranslateIntoChinese.Model.Enums"
              xmlns:view="clr-namespace:TranslateIntoChinese.View"
              Background="{Binding Source={x:Static colors:ColorHelper.Background}}"
-             MinWidth="380"
+             MinWidth="460"
              mc:Ignorable="d"
-             d:DesignHeight="450"
-             d:DesignWidth="581.25"
+             d:DesignHeight="720"
+             d:DesignWidth="620"
              Name="MyToolWindow">
 
     <UserControl.Resources>
-        <!-- 提取公共样式，让控件更整洁 -->
+        <colors:BoolToVisibilityConverter x:Key="BoolToVis"/>
+
         <Style TargetType="view:CellControl">
             <Setter Property="Margin" Value="0,0,0,2"/>
             <Setter Property="Padding" Value="10,12"/>
@@ -24,13 +25,19 @@
         </Style>
 
         <Style TargetType="ComboBox">
-            <Setter Property="Width" Value="150"/>
+            <Setter Property="MinWidth" Value="170"/>
             <Setter Property="Height" Value="24"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
 
         <Style TargetType="CheckBox">
             <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="MinHeight" Value="24"/>
+            <Setter Property="Padding" Value="4,2"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
 
         <ObjectDataProvider x:Key="DataFromEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
@@ -44,10 +51,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-            <!-- 改为自动高度，由内容决定 -->
         </Grid.RowDefinitions>
 
-        <!-- 增加滚动支持，防止窗口过小时内容被遮挡 -->
         <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0" Margin="0,0,0,10">
             <StackPanel Orientation="Vertical">
 
@@ -62,10 +67,26 @@
                 </view:CellControl>
 
                 <view:CellControl>
+                    <view:CellControl.O_Title>悬停翻译</view:CellControl.O_Title>
+                    <view:CellControl.O_Content>鼠标悬停时弹出翻译。关闭后仅用快捷键翻译选中的单词/行/段</view:CellControl.O_Content>
+                    <view:CellControl.O_Handle>
+                        <CheckBox IsChecked="{Binding Config.EnableHoverTranslate, Mode=TwoWay}"/>
+                    </view:CellControl.O_Handle>
+                </view:CellControl>
+
+                <view:CellControl>
                     <view:CellControl.O_Title>远程翻译</view:CellControl.O_Title>
-                    <view:CellControl.O_Content>开启后本地词库找不到的单词，将通过API在线翻译</view:CellControl.O_Content>
+                    <view:CellControl.O_Content>本地词库未命中时，使用下方在线引擎补位（Bing/Google 等）</view:CellControl.O_Content>
                     <view:CellControl.O_Handle>
                         <CheckBox IsChecked="{Binding Config.IsRemoteTranslate, Mode=TwoWay}"/>
+                    </view:CellControl.O_Handle>
+                </view:CellControl>
+
+                <view:CellControl>
+                    <view:CellControl.O_Title>文档翻译</view:CellControl.O_Title>
+                    <view:CellControl.O_Content>自动翻译第三方库 IntelliSense 文档注释（需开启远程或 AI）</view:CellControl.O_Content>
+                    <view:CellControl.O_Handle>
+                        <CheckBox IsChecked="{Binding Config.EnableDocumentTranslate, Mode=TwoWay}"/>
                     </view:CellControl.O_Handle>
                 </view:CellControl>
 
@@ -73,12 +94,12 @@
                 <TextBlock Text="翻译与语音" FontSize="14" FontWeight="Bold" Foreground="#888888" Margin="10,5,0,10"/>
 
                 <view:CellControl>
-                    <view:CellControl.O_Title>在线翻译平台</view:CellControl.O_Title>
-                    <view:CellControl.O_Content>根据个人喜好选择最优的翻译引擎</view:CellControl.O_Content>
+                    <view:CellControl.O_Title>在线引擎</view:CellControl.O_Title>
+                    <view:CellControl.O_Content>未启用 AI 时使用的传统翻译平台</view:CellControl.O_Content>
                     <view:CellControl.O_Handle>
                         <ComboBox SelectedValue="{Binding Config.TranslateType, Mode=TwoWay}"
-                                  ItemsSource="{Binding TranslateItems}" 
-                                  DisplayMemberPath="Name" 
+                                  ItemsSource="{Binding TranslateItems}"
+                                  DisplayMemberPath="Name"
                                   SelectedValuePath="Value"/>
                     </view:CellControl.O_Handle>
                 </view:CellControl>
@@ -88,9 +109,9 @@
                     <view:CellControl.O_Content>选择发音 API 类型</view:CellControl.O_Content>
                     <view:CellControl.O_Handle>
                         <ComboBox SelectedValue="{Binding Config.Sound, Mode=TwoWay}"
-                                  ItemsSource="{Binding SoundItems}" 
-                                  DisplayMemberPath="Name" 
-                                  SelectedValuePath="Value" 
+                                  ItemsSource="{Binding SoundItems}"
+                                  DisplayMemberPath="Name"
+                                  SelectedValuePath="Value"
                                   SelectionChanged="sound_SelectionChanged"/>
                     </view:CellControl.O_Handle>
                 </view:CellControl>
@@ -99,20 +120,196 @@
                     <view:CellControl.O_Title>发音角色</view:CellControl.O_Title>
                     <view:CellControl.O_Content>选择具体的语音包角色名称</view:CellControl.O_Content>
                     <view:CellControl.O_Handle>
-                        <ComboBox SelectedItem="{Binding Config.SoundName, Mode=TwoWay}" 
+                        <ComboBox SelectedItem="{Binding Config.SoundName, Mode=TwoWay}"
                                   ItemsSource="{Binding SoundList}"/>
                     </view:CellControl.O_Handle>
                 </view:CellControl>
 
+                <Separator Margin="5,10" Background="#333333" Height="1"/>
+                <TextBlock Text="快捷键" FontSize="14" FontWeight="Bold" Foreground="#888888" Margin="10,5,0,10"/>
+
+                <view:CellControl>
+                    <view:CellControl.O_Title>翻译快捷键</view:CellControl.O_Title>
+                    <view:CellControl.O_Content>点击输入框后按下组合键，支持 Ctrl+K, K 这类双击快捷键</view:CellControl.O_Content>
+                    <view:CellControl.O_Handle>
+                        <TextBox Width="160"
+                                 IsReadOnly="True"
+                                 Text="{Binding Config.TranslateHotkey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 PreviewKeyDown="HotkeyBox_PreviewKeyDown"
+                                 ToolTip="点击后按下快捷键"/>
+                    </view:CellControl.O_Handle>
+                </view:CellControl>
+
+                <Separator Margin="5,10" Background="#333333" Height="1"/>
+                <TextBlock Text="AI 大模型" FontSize="14" FontWeight="Bold" Foreground="#888888" Margin="10,5,0,10"/>
+
+                <view:CellControl>
+                    <view:CellControl.O_Title>启用 AI</view:CellControl.O_Title>
+                    <view:CellControl.O_Content>长句、选区和文档注释走大模型；单词仍优先本地词库</view:CellControl.O_Content>
+                    <view:CellControl.O_Handle>
+                        <CheckBox IsChecked="{Binding Config.UseAiTranslate, Mode=TwoWay}"/>
+                    </view:CellControl.O_Handle>
+                </view:CellControl>
+
+                <StackPanel Visibility="{Binding Config.UseAiTranslate, Converter={StaticResource BoolToVis}}" Margin="10,6,10,0">
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="90"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="接口协议" VerticalAlignment="Center" Foreground="{Binding Source={x:Static colors:ColorHelper.Primary}}"/>
+                        <ComboBox Grid.Column="1"
+                                  HorizontalAlignment="Left"
+                                  SelectedValue="{Binding Config.AiProvider, Mode=TwoWay}"
+                                  ItemsSource="{Binding AiProviderItems}"
+                                  DisplayMemberPath="Name"
+                                  SelectedValuePath="Value"
+                                  SelectionChanged="AiProvider_SelectionChanged"/>
+                    </Grid>
+
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="90"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Base URL" VerticalAlignment="Center" Foreground="{Binding Source={x:Static colors:ColorHelper.Primary}}"/>
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding Config.AiBaseUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 ToolTip="例如 http://localhost:1234/v1 或 https://api.openai.com/v1"/>
+                    </Grid>
+
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="90"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="API Key" VerticalAlignment="Center" Foreground="{Binding Source={x:Static colors:ColorHelper.Primary}}"/>
+                        <PasswordBox x:Name="ApiKeyBox"
+                                     Grid.Column="1"
+                                     PasswordChanged="ApiKeyBox_PasswordChanged"/>
+                    </Grid>
+
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="90"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="模型名称" VerticalAlignment="Center" Foreground="{Binding Source={x:Static colors:ColorHelper.Primary}}"/>
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding Config.AiModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 ToolTip="LM Studio 可留空（使用当前加载模型）；Ollama 如 qwen2.5"/>
+                    </Grid>
+
+                    <TextBlock Text="翻译指令（系统默认，可自由修改）" Margin="0,4,0,6"
+                               Foreground="{Binding Source={x:Static colors:ColorHelper.Primary}}"/>
+                    <TextBox Text="{Binding Config.AiPrompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto"
+                             MinHeight="110"
+                             MaxHeight="180"
+                             VerticalContentAlignment="Top"
+                             ToolTip="可用 {text} 占位符把待译内容嵌入指令"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,4">
+                        <Button Content="恢复默认指令" Padding="10,4" Margin="0,0,8,0" Click="ResetPrompt_Click"/>
+                        <Button Content="测试连接" Padding="10,4" Click="TestAi_Click"/>
+                    </StackPanel>
+                    <TextBlock x:Name="AiTestResult"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,8"
+                               Foreground="{Binding Source={x:Static colors:ColorHelper.Second}}"/>
+
+                    <Separator Margin="0,8,0,10" Background="#333333" Height="1"/>
+                    <TextBlock Text="划词快捷指令" FontSize="13" FontWeight="Bold"
+                               Foreground="#888888" Margin="0,0,0,8"/>
+                    <TextBlock TextWrapping="Wrap" Margin="0,0,0,8" Opacity="0.85"
+                               Foreground="{Binding Source={x:Static colors:ColorHelper.Text}}"
+                               Text="选中一段文本后，在选区附近弹出指令条。仅在启用 AI 且下方开关打开时显示。点击后用对应指令调用模型，并替换选区。"/>
+
+                    <view:CellControl>
+                        <view:CellControl.O_Title>划词指令</view:CellControl.O_Title>
+                        <view:CellControl.O_Content>选中文本时显示快捷指令条</view:CellControl.O_Content>
+                        <view:CellControl.O_Handle>
+                            <CheckBox IsChecked="{Binding Config.EnableQuickActions, Mode=TwoWay}"/>
+                        </view:CellControl.O_Handle>
+                    </view:CellControl>
+
+                    <ItemsControl ItemsSource="{Binding QuickActionItems}" Margin="0,8,0,8">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Margin="0,0,0,8" Padding="8" CornerRadius="6" Background="#33000000">
+                                    <StackPanel>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Orientation="Horizontal">
+                                                <CheckBox IsChecked="{Binding Enabled, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                <TextBox Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         MinWidth="140" MaxWidth="220"/>
+                                                <TextBlock Text="{Binding KindLabel}" Margin="8,0,0,0" VerticalAlignment="Center" Opacity="0.6"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                <Button Content="恢复" Padding="8,2" Margin="0,0,6,0"
+                                                        Click="ResetActionPrompt_Click" Tag="{Binding}"
+                                                        Visibility="{Binding IsBuiltIn, Converter={StaticResource BoolToVis}}"/>
+                                                <Button Content="删除" Padding="8,2"
+                                                        Click="DeleteQuickAction_Click" Tag="{Binding}"
+                                                        Visibility="{Binding IsBuiltIn, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}"/>
+                                            </StackPanel>
+                                        </Grid>
+                                        <TextBox Text="{Binding Prompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                 AcceptsReturn="True"
+                                                 TextWrapping="Wrap"
+                                                 MinHeight="56"
+                                                 MaxHeight="120"
+                                                 VerticalScrollBarVisibility="Auto"
+                                                 VerticalContentAlignment="Top"
+                                                 Margin="0,6,0,0"/>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Text="添加自定义指令" Margin="0,4,0,6"
+                               Foreground="{Binding Source={x:Static colors:ColorHelper.Primary}}"/>
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="名称" VerticalAlignment="Center"
+                                   Foreground="{Binding Source={x:Static colors:ColorHelper.Text}}"/>
+                        <TextBox x:Name="NewActionTitle" Grid.Column="1"/>
+                    </Grid>
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="指令" VerticalAlignment="Top" Margin="0,4,0,0"
+                                   Foreground="{Binding Source={x:Static colors:ColorHelper.Text}}"/>
+                        <TextBox x:Name="NewActionPrompt" Grid.Column="1"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 MinHeight="56"
+                                 VerticalContentAlignment="Top"
+                                 ToolTip="可用 {text} 把选中内容嵌入指令；留空则选区作为用户消息"/>
+                    </Grid>
+                    <Button Content="添加自定义指令" Padding="10,4" HorizontalAlignment="Left" Click="AddQuickAction_Click"/>
+                </StackPanel>
+
             </StackPanel>
         </ScrollViewer>
 
-        <!-- 按钮区域优化 -->
         <Border Grid.Row="1" BorderBrush="#333333" BorderThickness="0,1,0,0" Padding="0,15,0,0">
-            <Button Content="保存配置并应用" 
+            <Button Content="保存配置并应用"
                     Padding="20,6"
                     HorizontalAlignment="Right"
-                    Background="#007ACC" 
+                    Background="#007ACC"
                     Foreground="White"
                     BorderThickness="0"
                     Cursor="Hand"

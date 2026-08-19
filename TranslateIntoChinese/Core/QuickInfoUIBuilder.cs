@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Core.Imaging;
+using Microsoft.VisualStudio.Core.Imaging;
 using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text.Adornments;
@@ -7,7 +7,7 @@ using MoqDictionary.utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TranslateIntoChinese.Model;
 
@@ -15,39 +15,46 @@ namespace TranslateIntoChinese.Core
 {
     public class QuickInfoUIBuilder
     {
-        public async Task<List<ContainerElement>> BuildTranslationElementsAsync(string text)
+        public async Task<List<ContainerElement>> BuildTranslationElementsAsync(string text, CancellationToken cancellationToken)
         {
             var elements = new List<ContainerElement>();
+            if (string.IsNullOrWhiteSpace(text)) return elements;
 
-            // 如果包含空格或长度较长，视为长句/选区翻译
-            if (text.Contains(" ") || text.Length > 25)
+            if (EditorTextPicker.LooksLikeSentence(text))
             {
-                if (Constants.Config.IsRemoteTranslate)
+                if (TranslationCoordinator.CanTranslateRemotely)
                 {
-                    var remote = await TranslateHelper.getTranslateAsync(Constants.Config.TranslateType, new List<string> { text });
-                    if (remote?.Any() == true)
-                        elements.Add(CreateSimpleElement(text, remote[0]));
+                    var remote = await TranslationCoordinator.TranslateOneAsync(text, cancellationToken).ConfigureAwait(false);
+                    if (!string.IsNullOrWhiteSpace(remote))
+                        elements.Add(CreateSimpleElement("[选区翻译]", remote));
+                    else
+                        elements.Add(CreateSimpleElement("[选区翻译]", "未返回译文。请检查网络、远程引擎或 AI 的 Base URL / 模型 / Key。"));
                 }
+                else
+                {
+                    elements.Add(CreateSimpleElement("[选区翻译]", "长句/选区翻译需要开启「远程翻译」或「AI 大模型」。"));
+                }
+                return elements;
             }
-            else
+
+            var words = ParseString.getWordArray(text);
+            foreach (var word in words ?? Array.Empty<string>())
             {
-                // 单词分割逻辑
-                var words = ParseString.getWordArray(text);
-                foreach (var word in words ?? new string[0])
+                cancellationToken.ThrowIfCancellationRequested();
+                var local = QueryDir.getDir(word);
+                if (local != null)
                 {
-                    var local = QueryDir.getDir(word);
-                    if (local != null)
-                    {
-                        elements.Add(CreateDictionaryElement(local));
-                    }
-                    else if (Constants.Config.IsRemoteTranslate)
-                    {
-                        var remote = await TranslateHelper.getTranslateAsync(Constants.Config.TranslateType, new List<string> { word });
-                        if (remote?.Any() == true)
-                            elements.Add(CreateDictionaryElement(new Dictionarys { key = word, t = remote[0] }));
-                    }
+                    elements.Add(CreateDictionaryElement(local));
+                    continue;
                 }
+
+                if (!TranslationCoordinator.CanTranslateRemotely) continue;
+
+                var remote = await TranslationCoordinator.TranslateOneAsync(word, cancellationToken).ConfigureAwait(false);
+                if (!string.IsNullOrWhiteSpace(remote))
+                    elements.Add(CreateDictionaryElement(new Dictionarys { key = word, t = remote }));
             }
+
             return elements;
         }
 
@@ -70,7 +77,7 @@ namespace TranslateIntoChinese.Core
         private ContainerElement CreateSimpleElement(string title, string content)
         {
             return new ContainerElement(ContainerElementStyle.Stacked,
-                new ClassifiedTextElement(new ClassifiedTextRun(PredefinedClassificationTypeNames.MarkupNode, $"[选区翻译]")),
+                new ClassifiedTextElement(new ClassifiedTextRun(PredefinedClassificationTypeNames.MarkupNode, title)),
                 new ClassifiedTextElement(new ClassifiedTextRun(PredefinedClassificationTypeNames.NaturalLanguage, content.Replace(@"\n", "\n"))));
         }
     }

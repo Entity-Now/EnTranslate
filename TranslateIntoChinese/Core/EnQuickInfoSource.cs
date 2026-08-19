@@ -1,34 +1,12 @@
+using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Adornments;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.Text.Operations;
-using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Utilities;
 using System.Threading;
-using TranslateIntoChinese.View;
-using Microsoft.VisualStudio.Text.Adornments;
-using Microsoft.VisualStudio.Threading;
-using System.Text.RegularExpressions;
-using Microsoft.VisualStudio.Language.StandardClassification;
-using MoqDictionary.utility;
-using System.Windows;
-using MoqDictionary.Model;
-using Microsoft.VisualStudio.Text.Classification;
-using Microsoft.VisualStudio.Core.Imaging;
-using Microsoft.VisualStudio.PlatformUI;
-using Microsoft.VisualStudio.Imaging;
-using System.Windows.Controls;
-using TranslateIntoChinese.Utility;
+using System.Threading.Tasks;
 using TranslateIntoChinese.Model;
-using Edge_tts_sharp;
-using System.IO;
-using Edge_tts_sharp.Utils;
-using Edge_tts_sharp.Model;
-using System.Web;
-
 
 namespace TranslateIntoChinese.Core
 {
@@ -36,7 +14,6 @@ namespace TranslateIntoChinese.Core
     {
         private readonly EnQuickInfoSourceProvider _provider;
         private readonly ITextBuffer _textBuffer;
-        // 引入新模块
         private readonly QuickInfoTextExtractor _extractor;
         private readonly QuickInfoUIBuilder _uiBuilder;
         private readonly LegacyInfoService _legacyService;
@@ -54,34 +31,44 @@ namespace TranslateIntoChinese.Core
 
         public async Task<QuickInfoItem> GetQuickInfoItemAsync(IAsyncQuickInfoSession session, CancellationToken cancellationToken)
         {
-            if (session.Properties.ContainsProperty("MyTranslatePluginProcessed")) return null;
-
             try
             {
-                // 1. 获取目标文本和范围
+                if (session == null) return default;
+
+                var cfg = Constants.Config;
+                if (cfg == null) return default;
+                if (!cfg.EnableHoverTranslate && !TranslateTrigger.IsArmed) return default;
+
+                // 先取出有效文本再抢占会话，避免空投影缓冲把会话标成已处理
                 var target = _extractor.GetTargetText(session);
                 if (target == null) return default;
 
-                List<ContainerElement> wordElements = new List<ContainerElement>();
+                if (!QuickInfoSessionGuard.TryClaim(session)) return default;
 
-                // 2. 处理 Legacy 内容 (原生提示翻译)
-                if (Constants.Config.IsRemoteTranslate)
+                cancellationToken.ThrowIfCancellationRequested();
+
+                var wordElements = new List<ContainerElement>();
+
+                if (TranslationCoordinator.CanTranslateDocuments)
                 {
-                    var legacyElements = await _legacyService.GetLegacyTranslationsAsync(session);
-                    if (legacyElements.Any()) wordElements.AddRange(legacyElements);
+                    var legacyElements = await _legacyService.GetLegacyTranslationsAsync(session, cancellationToken).ConfigureAwait(false);
+                    if (legacyElements != null && legacyElements.Count > 0)
+                        wordElements.AddRange(legacyElements);
                 }
 
-                // 3. 处理主文本翻译 (选区或单词)
-                var translationElements = await _uiBuilder.BuildTranslationElementsAsync(target.Text);
-                wordElements.AddRange(translationElements);
+                cancellationToken.ThrowIfCancellationRequested();
 
-                if (!wordElements.Any()) return default;
+                var translationElements = await _uiBuilder.BuildTranslationElementsAsync(target.Text, cancellationToken).ConfigureAwait(false);
+                if (translationElements != null && translationElements.Count > 0)
+                    wordElements.AddRange(translationElements);
 
-                // 只有成功产生翻译项时才标记已处理，防止空缓冲率先抢占标识导致主缓冲区无法翻译
-                if (session.Properties.ContainsProperty("MyTranslatePluginProcessed")) return null;
-                session.Properties.AddProperty("MyTranslatePluginProcessed", true);
+                if (wordElements.Count == 0) return default;
 
                 return new QuickInfoItem(target.ApplicableSpan, new ContainerElement(ContainerElementStyle.Stacked, wordElements));
+            }
+            catch (OperationCanceledException)
+            {
+                return default;
             }
             catch (Exception ex)
             {

@@ -1,5 +1,6 @@
 ﻿using MoqDictionary.Model.Enum;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -53,6 +54,87 @@ namespace TranslateIntoChinese.Model
             set { _translateType = value; OnPropertyChanged(); }
         }
 
+        private bool _enableHoverTranslate = true;
+        /// <summary>鼠标悬停时弹出翻译。关闭后仅通过快捷键触发。</summary>
+        public bool EnableHoverTranslate
+        {
+            get => _enableHoverTranslate;
+            set { _enableHoverTranslate = value; OnPropertyChanged(); }
+        }
+
+        private bool _enableDocumentTranslate = true;
+        /// <summary>将第三方库 / IntelliSense 文档注释一并翻译。</summary>
+        public bool EnableDocumentTranslate
+        {
+            get => _enableDocumentTranslate;
+            set { _enableDocumentTranslate = value; OnPropertyChanged(); }
+        }
+
+        private bool _useAiTranslate = false;
+        /// <summary>远程补位与长句/文档翻译改走大模型，本地词库仍优先。</summary>
+        public bool UseAiTranslate
+        {
+            get => _useAiTranslate;
+            set { _useAiTranslate = value; OnPropertyChanged(); }
+        }
+
+        private AiProviderType _aiProvider = AiProviderType.OpenAICompatible;
+        public AiProviderType AiProvider
+        {
+            get => _aiProvider;
+            set { _aiProvider = value; OnPropertyChanged(); }
+        }
+
+        private string _aiBaseUrl = string.Empty;
+        public string AiBaseUrl
+        {
+            get => _aiBaseUrl;
+            set { _aiBaseUrl = value ?? string.Empty; OnPropertyChanged(); }
+        }
+
+        private string _aiApiKey = string.Empty;
+        public string AiApiKey
+        {
+            get => _aiApiKey;
+            set { _aiApiKey = value ?? string.Empty; OnPropertyChanged(); }
+        }
+
+        private string _aiModel = string.Empty;
+        public string AiModel
+        {
+            get => _aiModel;
+            set { _aiModel = value ?? string.Empty; OnPropertyChanged(); }
+        }
+
+        private string _aiPrompt = AiProviderDefaults.DefaultPrompt;
+        public string AiPrompt
+        {
+            get => string.IsNullOrWhiteSpace(_aiPrompt) ? AiProviderDefaults.DefaultPrompt : _aiPrompt;
+            set { _aiPrompt = value ?? string.Empty; OnPropertyChanged(); }
+        }
+
+        private string _translateHotkey = "Ctrl+Alt+T";
+        public string TranslateHotkey
+        {
+            get => string.IsNullOrWhiteSpace(_translateHotkey) ? "Ctrl+Alt+T" : _translateHotkey;
+            set { _translateHotkey = value ?? "Ctrl+Alt+T"; OnPropertyChanged(); }
+        }
+
+        private bool _enableQuickActions = true;
+        /// <summary>选中文本后显示划词快捷指令条。仅在启用 AI 时生效。</summary>
+        public bool EnableQuickActions
+        {
+            get => _enableQuickActions;
+            set { _enableQuickActions = value; OnPropertyChanged(); }
+        }
+
+        private List<QuickActionItem> _quickActions = new List<QuickActionItem>();
+        public List<QuickActionItem> QuickActions
+        {
+            get => _quickActions ?? (_quickActions = new List<QuickActionItem>());
+            set { _quickActions = value ?? new List<QuickActionItem>(); OnPropertyChanged(); }
+        }
+
         // --- 事件处理 ---
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -75,14 +157,17 @@ namespace TranslateIntoChinese.Model
 
                 if (!File.Exists(Constants.SettingsPath))
                 {
-                    return new Config();
+                    var fresh = new Config();
+                    fresh.QuickActions = BuiltInQuickActions.Merge(null);
+                    return fresh;
                 }
 
                 string settingsJson = File.ReadAllText(Constants.SettingsPath);
 
                 // 增加容错：如果文件为空或解析失败，返回默认对象
-                var settings = JsonSerializer.Deserialize<Config>(settingsJson);
-                return settings ?? new Config();
+                var settings = JsonSerializer.Deserialize<Config>(settingsJson) ?? new Config();
+                settings.QuickActions = BuiltInQuickActions.Merge(settings.QuickActions);
+                return settings;
             }
             catch (Exception)
             {

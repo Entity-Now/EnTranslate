@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://schemas.microsoft.com/2001/XMLSchema">
 
   <Extern href="stdidcmd.h"/>
   <Extern href="vsshlids.h"/>
@@ -10,6 +10,9 @@
     <Groups>
       <Group guid="TranslateIntoChinese" id="TranslateIntoChineseGroup" priority="0x0600">
         <Parent guid="TranslateIntoChinese" id="MenuGroup"/>
+      </Group>
+      <Group guid="TranslateIntoChinese" id="EditorContextGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
       </Group>
     </Groups>
 
@@ -30,13 +33,35 @@
 				  <ButtonText>TC-设置</ButtonText>
 			  </Strings>
 		  </Button>
+		  <Button guid="TranslateIntoChinese" id="TranslateSelectionCommand" priority="0x0200" type="Button">
+			  <Parent guid="TranslateIntoChinese" id="TranslateIntoChineseGroup"/>
+			  <Icon guid="ImageCatalogGuid" id="IntellisenseKeyword" />
+			  <CommandFlag>IconIsMoniker</CommandFlag>
+			  <Strings>
+				  <ButtonText>翻译选中文本</ButtonText>
+				  <CanonicalName>TranslateSelection</CanonicalName>
+				  <LocCanonicalName>TranslateSelection</LocCanonicalName>
+			  </Strings>
+		  </Button>
 	  </Buttons>
   </Commands>
+
+  <CommandPlacements>
+	  <CommandPlacement guid="TranslateIntoChinese" id="TranslateSelectionCommand" priority="0x0600">
+		  <Parent guid="TranslateIntoChinese" id="EditorContextGroup"/>
+	  </CommandPlacement>
+  </CommandPlacements>
+
+  <KeyBindings>
+	  <KeyBinding guid="TranslateIntoChinese" id="TranslateSelectionCommand" editor="guidVSStd97" key1="T" mod1="Control Alt"/>
+  </KeyBindings>
 
   <Symbols>
     <GuidSymbol name="TranslateIntoChinese" value="{c47bdd20-91d7-4458-adb0-f94598cf3de3}">
       <IDSymbol name="TranslateIntoChineseGroup" value="0x0001" />
+      <IDSymbol name="EditorContextGroup" value="0x0002" />
 	  <IDSymbol name="ShowSettingsCommand" value="0x0100"/>
+	  <IDSymbol name="TranslateSelectionCommand" value="0x0101"/>
 		<IDSymbol name="MenuGroup" value="0x0111"/>
     </GuidSymbol>
   </Symbols>

@@ -54,21 +54,32 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Core\AiTranslateService.cs" />
     <Compile Include="Core\Commands\ShowSettingsCommand.cs" />
+    <Compile Include="Core\Commands\TranslateSelectionCommand.cs" />
+    <Compile Include="Core\EditorTextPicker.cs" />
     <Compile Include="Core\EnQuickInfoSource.cs" />
     <Compile Include="Core\EnQuickInfoSourceProvider.cs" />
+    <Compile Include="Core\HotkeyService.cs" />
     <Compile Include="Core\LegacyInfoService.cs" />
+    <Compile Include="Core\QuickActionRunner.cs" />
     <Compile Include="Core\QuickInfoTextExtractor.cs" />
     <Compile Include="Core\QuickInfoUIBuilder.cs" />
     <Compile Include="Core\RegisterMenuCommand.cs" />
+    <Compile Include="Core\SelectionQuickActionController.cs" />
     <Compile Include="Core\TextViewCreationListener.cs" />
     <Compile Include="Core\ToolWindows\SettingsToolWindow.cs" />
     <Compile Include="Core\ToolWindows\SettingsToolWindowControl.xaml.cs">
       <DependentUpon>SettingsToolWindowControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\TranslationCoordinator.cs" />
     <Compile Include="Core\VoiceService.cs" />
+    <Compile Include="Model\AiProviderDefaults.cs" />
+    <Compile Include="Model\BuiltInQuickActions.cs" />
     <Compile Include="Model\Config.cs" />
+    <Compile Include="Model\QuickActionItem.cs" />
     <Compile Include="Model\Constants.cs" />
+    <Compile Include="Model\Enums\AiProviderType.cs" />
     <Compile Include="Model\Enums\SoundType.cs" />
     <Compile Include="Model\SelectOption.cs" />
     <Compile Include="ProjectInfo.Designer.cs">
@@ -83,11 +94,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
+    <Compile Include="Utility\BoolToVisibilityConverter.cs" />
     <Compile Include="Utility\ColorHelper.cs" />
     <Compile Include="Utility\JsonHelper.cs" />
     <Compile Include="Utility\SystemHelper.cs" />
     <Compile Include="View\CellControl.xaml.cs">
       <DependentUpon>CellControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\QuickActionBar.xaml.cs">
+      <DependentUpon>QuickActionBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TranslateView.xaml.cs">
       <DependentUpon>TranslateView.xaml</DependentUpon>
@@ -122,6 +137,7 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="EnvDTE" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -130,6 +146,7 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Design" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Speech" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xaml" />
@@ -165,6 +182,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\CellControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\QuickActionBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

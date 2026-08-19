@@ -21,7 +21,9 @@ namespace TranslateIntoChinese
     internal sealed partial class PackageIds
     {
         public const int TranslateIntoChineseGroup = 0x0001;
+        public const int EditorContextGroup = 0x0002;
         public const int ShowSettingsCommand = 0x0100;
+        public const int TranslateSelectionCommand = 0x0101;
         public const int MenuGroup = 0x0111;
     }
 }
